@@ -1,4 +1,4 @@
-package com.example.demo.author;
+package com.example.demo.musicGenre;
 
 import com.example.demo.song.Song;
 import lombok.AllArgsConstructor;
@@ -19,13 +19,9 @@ import java.util.UUID;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Author {
+public class MusicGenre {
     private UUID id;
-    private String name;
-    private Integer debutYear;
-    private Type type;
+    private String genre;
+    private Integer yearOfOrigin;
     private List<Song> songs;
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private byte[] portrait;
 }

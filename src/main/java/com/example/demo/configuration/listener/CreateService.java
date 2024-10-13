@@ -14,5 +14,4 @@ public class CreateService implements ServletContextListener {
         AuthorRepository aRepo = new AuthorRepository();
         event.getServletContext().setAttribute("authorService", new AuthorService(aRepo));
     }
-
 }
