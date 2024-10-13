@@ -9,4 +9,8 @@
         <listener-class>com.example.demo.configuration.listener.CreateService</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>com.example.demo.configuration.listener.InitializedData</listener-class>
+    </listener>
+
 </web-app>

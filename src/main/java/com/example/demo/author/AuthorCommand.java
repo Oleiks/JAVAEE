@@ -2,20 +2,16 @@ package com.example.demo.author;
 
 import lombok.*;
 
-import java.util.UUID;
-
-@Builder
-@ToString
 @Getter
-@EqualsAndHashCode
+@Setter
+@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-public class AuthorDto {
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@ToString
+@EqualsAndHashCode
+public class AuthorCommand {
 
     private String name;
 
-    private UUID uuid;
-
     private Integer age;
-
 }
