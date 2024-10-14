@@ -7,14 +7,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AuthorService {
 
-    private static final String AVATAR_RESOURCE_FOLDER = "C:\\JAVAEE\\JAVAEE\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar\\";
+    public static final String AVATAR_RESOURCE_FOLDER = "E:\\testavatar\\";
 
     private final AuthorRepository authorRepository;
 
@@ -41,11 +41,11 @@ public class AuthorService {
 
     public synchronized void updateAvatar(UUID uuid, InputStream portrait) {
         Author author = find(uuid);
-        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");g
+        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");
         try {
             byte[] buffer = portrait.readAllBytes();
             author.setPortrait(buffer);
-            Files.copy(portrait, path, StandardCopyOption.REPLACE_EXISTING);
+            Files.write(path, buffer, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

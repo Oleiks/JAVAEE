@@ -38,8 +38,8 @@ public class ApiServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        authorService = (AuthorService) getServletContext().getAttribute("authorService");
         super.init();
+        authorService = (AuthorService) getServletContext().getAttribute("authorService");
     }
 
     @Override
@@ -94,8 +94,6 @@ public class ApiServlet extends HttpServlet {
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
-    @SuppressWarnings("RedundantThrows")
-    @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
@@ -107,7 +105,6 @@ public class ApiServlet extends HttpServlet {
                 return;
             }
         }
-        System.out.println("TESTSTETESTS");
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
 
