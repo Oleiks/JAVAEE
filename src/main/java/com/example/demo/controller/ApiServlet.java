@@ -25,16 +25,16 @@ import static com.example.demo.controller.ApiServlet.API;
 @MultipartConfig(maxFileSize = 200 * 1024)
 public class ApiServlet extends HttpServlet {
 
+    public static final String API = "/api";
+
     private static final Pattern UUID = Pattern.compile("[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}");
     private static final Pattern AUTHOR_PORTRAIT = Pattern.compile("/authors/(%s)/avatar".formatted(UUID.pattern()));
     private static final Pattern AUTHOR = Pattern.compile("/authors/(%s)".formatted(UUID.pattern()));
     private static final Pattern AUTHORS = Pattern.compile("/authors/");
-    public static final String API = "/api";
-
-    private AuthorService authorService;
 
     private final Jsonb jsonb = JsonbBuilder.create();
 
+    private AuthorService authorService;
 
     @Override
     public void init() throws ServletException {
