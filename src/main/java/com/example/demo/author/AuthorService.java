@@ -14,6 +14,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthorService {
 
+    private static final String AVATAR_RESOURCE_FOLDER = "C:\\JAVAEE\\JAVAEE\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar\\";
+
     private final AuthorRepository authorRepository;
 
     public synchronized List<AuthorDto> findAll() {
@@ -39,15 +41,11 @@ public class AuthorService {
 
     public synchronized void updateAvatar(UUID uuid, InputStream portrait) {
         Author author = find(uuid);
-        Path path = Paths.get("E:\\JavaEE\\demo\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar\\" + author.getId() + ".png");
+        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");g
         try {
-            author.setPortrait(portrait.readAllBytes());
+            byte[] buffer = portrait.readAllBytes();
+            author.setPortrait(buffer);
             Files.copy(portrait, path, StandardCopyOption.REPLACE_EXISTING);
-//            byte[] buffer = portrait.readAllBytes();
-//            author.setPortrait(buffer);
-//            File targetFile = new File("E:\\JavaEE\\demo\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar" + author.getId() + ".png");
-//            OutputStream outStream = new FileOutputStream(targetFile);
-//            outStream.write(buffer);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -55,15 +53,10 @@ public class AuthorService {
 
     public synchronized void deleteAvatar(UUID uuid) {
         Author author = find(uuid);
-        Path path = Paths.get("E:\\JavaEE\\demo\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar\\" + author.getId() + ".png");
+        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");
         try {
             author.setPortrait(null);
             Files.delete(path);
-//            byte[] buffer = portrait.readAllBytes();
-//            author.setPortrait(buffer);
-//            File targetFile = new File("C:\\JAVAEE\\JAVAEE\\src\\main\\resources\\com\\example\\demo\\configuration\\avatar\\" + author.getId() + ".png");
-//            OutputStream outStream = new FileOutputStream(targetFile);
-//            outStream.write(buffer);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }

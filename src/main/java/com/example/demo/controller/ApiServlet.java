@@ -17,8 +17,10 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.example.demo.controller.ApiServlet.API;
+
 @WebServlet(urlPatterns = {
-        "api/*"
+        API + "/*"
 })
 @MultipartConfig(maxFileSize = 200 * 1024)
 public class ApiServlet extends HttpServlet {
@@ -27,6 +29,7 @@ public class ApiServlet extends HttpServlet {
     private static final Pattern AUTHOR_PORTRAIT = Pattern.compile("/authors/(%s)/avatar".formatted(UUID.pattern()));
     private static final Pattern AUTHOR = Pattern.compile("/authors/(%s)".formatted(UUID.pattern()));
     private static final Pattern AUTHORS = Pattern.compile("/authors/");
+    public static final String API = "/api";
 
     private AuthorService authorService;
 
@@ -53,22 +56,24 @@ public class ApiServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (path.matches(AUTHORS.pattern())) {
-            response.setContentType("application/json");
-            response.getWriter().write(jsonb.toJson(authorService.findAll()));
-            return;
-        } else if (path.matches(AUTHOR_PORTRAIT.pattern())) {
-            response.setContentType("image/png");
-            UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-            byte[] portrait = authorService.findAuthorAvatar(uuid);
-            response.setContentLength(portrait.length);
-            response.getOutputStream().write(portrait);
-            return;
-        } else if (path.matches(AUTHOR.pattern())) {
-            response.setContentType("application/json");
-            UUID uuid = extractUuid(AUTHOR, path);
-            response.getWriter().write(jsonb.toJson(authorService.findById(uuid)));
-            return;
+        if (API.equals(servletPath)) {
+            if (path.matches(AUTHORS.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(authorService.findAll()));
+                return;
+            } else if (path.matches(AUTHOR_PORTRAIT.pattern())) {
+                response.setContentType("image/png");
+                UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
+                byte[] portrait = authorService.findAuthorAvatar(uuid);
+                response.setContentLength(portrait.length);
+                response.getOutputStream().write(portrait);
+                return;
+            } else if (path.matches(AUTHOR.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(AUTHOR, path);
+                response.getWriter().write(jsonb.toJson(authorService.findById(uuid)));
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -77,11 +82,14 @@ public class ApiServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
-        if (path.matches(AUTHORS.pattern())) {
-            response.setContentType("application/json");
-            authorService.create(jsonb.fromJson(request.getReader(), Author.class));
-            response.getWriter().write(jsonb.toJson(authorService.findAll()));
-            return;
+        String servletPath = request.getServletPath();
+        if (API.equals(servletPath)) {
+            if (path.matches(AUTHORS.pattern())) {
+                response.setContentType("application/json");
+                authorService.create(jsonb.fromJson(request.getReader(), Author.class));
+                response.getWriter().write(jsonb.toJson(authorService.findAll()));
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -91,11 +99,13 @@ public class ApiServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (path.matches(AUTHOR_PORTRAIT.pattern())) {
-            UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-            System.out.println(uuid);
-            authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream());
-            return;
+        if (API.equals(servletPath)) {
+            if (path.matches(AUTHOR_PORTRAIT.pattern())) {
+                UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
+                System.out.println(uuid);
+                authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream());
+                return;
+            }
         }
         System.out.println("TESTSTETESTS");
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -106,10 +116,12 @@ public class ApiServlet extends HttpServlet {
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (path.matches(AUTHOR_PORTRAIT.pattern())) {
-            UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-            authorService.deleteAvatar(uuid);
-            return;
+        if (API.equals(servletPath)) {
+            if (path.matches(AUTHOR_PORTRAIT.pattern())) {
+                UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
+                authorService.deleteAvatar(uuid);
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
@@ -118,10 +130,12 @@ public class ApiServlet extends HttpServlet {
     protected void doPatch(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String path = parseRequestPath(request);
         String servletPath = request.getServletPath();
-        if (path.matches(AUTHOR.pattern())) {
-            UUID uuid = extractUuid(AUTHOR, path);
-            authorService.updateAuthor(uuid, jsonb.fromJson(request.getReader(), AuthorCommand.class));
-            return;
+        if (API.equals(servletPath)) {
+            if (path.matches(AUTHOR.pattern())) {
+                UUID uuid = extractUuid(AUTHOR, path);
+                authorService.updateAuthor(uuid, jsonb.fromJson(request.getReader(), AuthorCommand.class));
+                return;
+            }
         }
         response.sendError(HttpServletResponse.SC_BAD_REQUEST);
     }
