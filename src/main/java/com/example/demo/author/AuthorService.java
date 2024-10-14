@@ -64,7 +64,6 @@ public class AuthorService {
 
     public synchronized void updateAuthor(UUID uuid, AuthorCommand authorCommand) {
         Author author = find(uuid);
-        System.out.println(authorCommand);
         if (author != null) {
             if (authorCommand.getAge() != null) {
                 author.setDebutYear(authorCommand.getAge());

@@ -100,7 +100,6 @@ public class ApiServlet extends HttpServlet {
         if (API.equals(servletPath)) {
             if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                System.out.println(uuid);
                 authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream());
                 return;
             }

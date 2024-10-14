@@ -3,7 +3,6 @@ package com.example.demo.configuration.listener;
 import com.example.demo.author.Author;
 import com.example.demo.author.AuthorService;
 import com.example.demo.author.Type;
-import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
@@ -60,7 +59,6 @@ public class InitializedData implements ServletContextListener {
         authorService.create(author2);
         authorService.create(author3);
         authorService.create(author4);
-        System.out.println(JsonbBuilder.create().toJson(authorService.findAll()));
     }
 
     @SneakyThrows
