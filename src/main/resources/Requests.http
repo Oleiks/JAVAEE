@@ -1,0 +1,63 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=IntelliJ IDEA
+
+<> 2024-10-14T101757.200.json
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
+
+<> 2024-10-14T102216.200.json
+<> 2024-10-14T102208.200.json
+<> 2024-10-14T102147.200.json
+<> 2024-10-14T101800.200.json
+
+###
+POST http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
+Content-Type: application/json
+
+{
+    "name": "Wilki",
+    "debutYear": 1991,
+    "type": "BAND"
+}
+
+<> 2024-10-14T102921.200.json
+<> 2024-10-14T102627.200.json
+<> 2024-10-14T102154.200.json
+<> 2024-10-14T101746.200.json
+<> 2024-10-14T101735.200.json
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f
+
+<> 2024-10-14T102200.200.json
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
+
+<> 2024-10-14T102228.200.png
+<> 2024-10-14T102203.200.png
+
+###
+PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/debfe789-7f47-4833-afc7-538115ae0bfe/avatar
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="avatar"; filename="file.txt"
+
+< C:\JAVAEE\JAVAEE\src\main\resources\com\example\demo\configuration\avatar\test.png
+--WebAppBoundary--
+
+<> 2024-10-14T102633.500.html
+<> 2024-10-14T102445.500.html
+<> 2024-10-14T102426.500.html
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
+
+<> 2024-10-14T102259.500.html
+<> 2024-10-14T102238.200.png
+
+###
+DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
