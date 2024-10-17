@@ -33,6 +33,7 @@ public class ApiServlet extends HttpServlet {
     private static final Pattern AUTHORS = Pattern.compile("/authors/");
 
     private final Jsonb jsonb = JsonbBuilder.create();
+    private String AUTHORS_FOLDER;
 
     private AuthorService authorService;
 
@@ -40,6 +41,7 @@ public class ApiServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         authorService = (AuthorService) getServletContext().getAttribute("authorService");
+        AUTHORS_FOLDER = getServletContext().getInitParameter("fileLocation");
     }
 
     @Override
@@ -64,7 +66,7 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 response.setContentType("image/png");
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                byte[] portrait = authorService.findAuthorAvatar(uuid);
+                byte[] portrait = authorService.findAuthorAvatar(uuid,AUTHORS_FOLDER);
                 response.setContentLength(portrait.length);
                 response.getOutputStream().write(portrait);
                 return;
@@ -100,7 +102,7 @@ public class ApiServlet extends HttpServlet {
         if (API.equals(servletPath)) {
             if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream());
+                authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream(), AUTHORS_FOLDER);
                 return;
             }
         }
@@ -115,7 +117,7 @@ public class ApiServlet extends HttpServlet {
         if (API.equals(servletPath)) {
             if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                authorService.deleteAvatar(uuid);
+                authorService.deleteAvatar(uuid, AUTHORS_FOLDER);
                 return;
             }
         }

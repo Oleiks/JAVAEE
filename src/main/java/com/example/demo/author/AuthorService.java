@@ -3,6 +3,7 @@ package com.example.demo.author;
 import com.example.demo.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,8 +14,6 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AuthorService {
-
-    public static final String AVATAR_RESOURCE_FOLDER = "E:\\testavatar\\";
 
     private final AuthorRepository authorRepository;
 
@@ -35,30 +34,32 @@ public class AuthorService {
         }
     }
 
-    public synchronized byte[] findAuthorAvatar(UUID id) {
-        return authorRepository.getAuthorByUUID(id).map(Author::getPortrait).orElseThrow(() -> new EntityNotFoundException("Author avatar not found"));
+    public synchronized byte[] findAuthorAvatar(UUID id, String pathToAvatars) {
+        try{
+            return Files.readAllBytes(Path.of(pathToAvatars+id+".png"));
+        } catch (IOException e) {
+            throw new EntityNotFoundException("Avatar not found");
+        }
     }
 
-    public synchronized void updateAvatar(UUID uuid, InputStream portrait) {
+    public synchronized void updateAvatar(UUID uuid, InputStream portrait, String pathToAvatars) {
         Author author = find(uuid);
-        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");
+        Path path = Paths.get(pathToAvatars + author.getId() + ".png");
         try {
             byte[] buffer = portrait.readAllBytes();
-            author.setPortrait(buffer);
             Files.write(path, buffer, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
     }
 
-    public synchronized void deleteAvatar(UUID uuid) {
+    public synchronized void deleteAvatar(UUID uuid, String pathToAvatars) {
         Author author = find(uuid);
-        Path path = Paths.get(AVATAR_RESOURCE_FOLDER + author.getId() + ".png");
+        Path path = Paths.get(pathToAvatars + author.getId() + ".png");
         try {
-            author.setPortrait(null);
             Files.delete(path);
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            throw new EntityNotFoundException("Avatar not found");
         }
     }
 

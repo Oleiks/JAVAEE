@@ -22,22 +22,4 @@ public class AuthorRepository {
     public Optional<Author> getAuthorByUUID(UUID uuid) {
         return getAuthors().stream().filter(author -> author.getId().equals(uuid)).findFirst();
     }
-
-//    @SneakyThrows
-//    @SuppressWarnings("unchecked")
-//    private <T extends Serializable> T cloneAuthor(T object) {
-//        try (ByteArrayInputStream is = new ByteArrayInputStream(writeObject(object).toByteArray());
-//             ObjectInputStream ois = new ObjectInputStream(is)) {
-//            return (T) ois.readObject();
-//        }
-//    }
-//
-//    private <T extends Serializable> ByteArrayOutputStream writeObject(T object) throws IOException {
-//        try (ByteArrayOutputStream os = new ByteArrayOutputStream();
-//             ObjectOutputStream oos = new ObjectOutputStream(os)) {
-//            oos.writeObject(object);
-//            return os;
-//        }
-//    }
-
 }

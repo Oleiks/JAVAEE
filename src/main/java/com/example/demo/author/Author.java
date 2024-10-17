@@ -25,7 +25,4 @@ public class Author {
     private Integer debutYear;
     private Type type;
     private List<Song> songs;
-    @ToString.Exclude
-    @EqualsAndHashCode.Exclude
-    private byte[] portrait;
 }

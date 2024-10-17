@@ -13,4 +13,9 @@
         <listener-class>com.example.demo.configuration.listener.InitializedData</listener-class>
     </listener>
 
+    <context-param>
+        <param-name>fileLocation</param-name>
+        <param-value>/home/student/188827/Avatar/</param-value>
+    </context-param>
+
 </web-app>
