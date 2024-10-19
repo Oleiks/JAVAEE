@@ -1,26 +1,39 @@
-package com.example.demo.configuration.listener;
+package com.example.demo.configuration.observer;
 
 import com.example.demo.author.Author;
 import com.example.demo.author.AuthorService;
 import com.example.demo.author.Type;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.Initialized;
+import jakarta.enterprise.context.control.RequestContextController;
+import jakarta.enterprise.event.Observes;
+import jakarta.inject.Inject;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import lombok.SneakyThrows;
 
 import java.util.UUID;
 
-@WebListener
+@ApplicationScoped
 public class InitializedData implements ServletContextListener {
 
-    private AuthorService authorService;
+    private final AuthorService authorService;
+    private final RequestContextController requestContextController;
 
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-        authorService = (AuthorService) event.getServletContext().getAttribute("authorService");
+    @Inject
+    public InitializedData(AuthorService authorService, RequestContextController requestContextController) {
+        this.authorService = authorService;
+        this.requestContextController=requestContextController;
+    }
+
+    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
         init();
     }
 
+    @SneakyThrows
     private void init() {
+        requestContextController.activate();
         Author author = Author.builder()
                 .id(UUID.fromString("bc72126e-9a5e-4304-a28a-df340312760f"))
                 .name("Kanye West")
@@ -49,5 +62,6 @@ public class InitializedData implements ServletContextListener {
         authorService.create(author2);
         authorService.create(author3);
         authorService.create(author4);
+        requestContextController.deactivate();
     }
 }

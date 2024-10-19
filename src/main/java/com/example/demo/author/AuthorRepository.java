@@ -1,5 +1,8 @@
 package com.example.demo.author;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,6 +10,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
+@ApplicationScoped
 public class AuthorRepository {
 
     private final Set<Author> authors = new HashSet<>();

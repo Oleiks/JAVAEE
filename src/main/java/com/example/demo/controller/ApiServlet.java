@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.author.Author;
 import com.example.demo.author.AuthorCommand;
 import com.example.demo.author.AuthorService;
+import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.servlet.ServletException;
@@ -37,11 +38,9 @@ public class ApiServlet extends HttpServlet {
 
     private AuthorService authorService;
 
-    @Override
-    public void init() throws ServletException {
-        super.init();
-        authorService = (AuthorService) getServletContext().getAttribute("authorService");
-        AUTHORS_FOLDER = getServletContext().getInitParameter("fileLocation");
+    @Inject
+    public ApiServlet(AuthorService authorService){
+        this.authorService=authorService;
     }
 
     @Override

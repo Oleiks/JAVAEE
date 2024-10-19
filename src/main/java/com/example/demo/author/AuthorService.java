@@ -1,6 +1,10 @@
 package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
+import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -12,10 +16,16 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
 
-@RequiredArgsConstructor
+@ApplicationScoped
+@NoArgsConstructor(force = true)
 public class AuthorService {
 
     private final AuthorRepository authorRepository;
+
+    @Inject
+    public AuthorService(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+    }
 
     public synchronized List<AuthorDto> findAll() {
         return authorRepository.getAuthors().stream().map(AuthorMapper::toAuthorDto).toList();

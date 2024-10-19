@@ -5,17 +5,9 @@
          version="6.0"
          metadata-complete="false">
 
-    <listener>
-        <listener-class>com.example.demo.configuration.listener.CreateService</listener-class>
-    </listener>
-
-    <listener>
-        <listener-class>com.example.demo.configuration.listener.InitializedData</listener-class>
-    </listener>
-
     <context-param>
         <param-name>fileLocation</param-name>
-        <param-value>/home/student/188827/Avatar/</param-value>
+        <param-value>C:\Users\oolle\OneDrive\Pulpit\Katalog\</param-value>
     </context-param>
 
 </web-app>
