@@ -20,8 +20,6 @@ public class AuthorCommand {
 
     private String name;
 
-    private Integer age;
-
     private Integer debutYear;
 
     private Type type;

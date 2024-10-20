@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.example.demo.author.Author;
 import com.example.demo.author.AuthorCommand;
 import com.example.demo.author.AuthorService;
+import com.example.demo.musicGenre.MusicGenreService;
+import com.example.demo.song.SongService;
 import jakarta.inject.Inject;
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
@@ -32,15 +34,25 @@ public class ApiServlet extends HttpServlet {
     private static final Pattern AUTHOR_PORTRAIT = Pattern.compile("/authors/(%s)/avatar".formatted(UUID.pattern()));
     private static final Pattern AUTHOR = Pattern.compile("/authors/(%s)".formatted(UUID.pattern()));
     private static final Pattern AUTHORS = Pattern.compile("/authors/");
+    private static final Pattern MUSIC_GENRE = Pattern.compile("/musicGenres/(%s)".formatted(UUID.pattern()));
+    private static final Pattern MUSIC_GENRES = Pattern.compile("/musicGenres/");
+    private static final Pattern SONG = Pattern.compile("/songs/(%s)".formatted(UUID.pattern()));
+    private static final Pattern SONGS = Pattern.compile("/songs/");
 
     private final Jsonb jsonb = JsonbBuilder.create();
     private String AUTHORS_FOLDER;
 
-    private AuthorService authorService;
+    private final AuthorService authorService;
+    private final SongService songService;
+    private final MusicGenreService musicGenreService;
 
     @Inject
-    public ApiServlet(AuthorService authorService){
-        this.authorService=authorService;
+    public ApiServlet(AuthorService authorService,
+                      SongService songService,
+                      MusicGenreService musicGenreService) {
+        this.authorService = authorService;
+        this.songService = songService;
+        this.musicGenreService = musicGenreService;
     }
 
     @Override
@@ -65,7 +77,7 @@ public class ApiServlet extends HttpServlet {
             } else if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 response.setContentType("image/png");
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                byte[] portrait = authorService.findAuthorAvatar(uuid,AUTHORS_FOLDER);
+                byte[] portrait = authorService.findAuthorAvatar(uuid);
                 response.setContentLength(portrait.length);
                 response.getOutputStream().write(portrait);
                 return;
@@ -73,6 +85,24 @@ public class ApiServlet extends HttpServlet {
                 response.setContentType("application/json");
                 UUID uuid = extractUuid(AUTHOR, path);
                 response.getWriter().write(jsonb.toJson(authorService.findById(uuid)));
+                return;
+            } else if (path.matches(SONGS.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(songService.findAll()));
+                return;
+            } else if (path.matches(SONG.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(SONG, path);
+                response.getWriter().write(jsonb.toJson(songService.findById(uuid)));
+                return;
+            } else if (path.matches(MUSIC_GENRES.pattern())) {
+                response.setContentType("application/json");
+                response.getWriter().write(jsonb.toJson(musicGenreService.findAll()));
+                return;
+            } else if (path.matches(MUSIC_GENRE.pattern())) {
+                response.setContentType("application/json");
+                UUID uuid = extractUuid(MUSIC_GENRE, path);
+                response.getWriter().write(jsonb.toJson(musicGenreService.findById(uuid)));
                 return;
             }
         }
@@ -101,7 +131,7 @@ public class ApiServlet extends HttpServlet {
         if (API.equals(servletPath)) {
             if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream(), AUTHORS_FOLDER);
+                authorService.updateAvatar(uuid, request.getPart("avatar").getInputStream());
                 return;
             }
         }
@@ -116,7 +146,7 @@ public class ApiServlet extends HttpServlet {
         if (API.equals(servletPath)) {
             if (path.matches(AUTHOR_PORTRAIT.pattern())) {
                 UUID uuid = extractUuid(AUTHOR_PORTRAIT, path);
-                authorService.deleteAvatar(uuid, AUTHORS_FOLDER);
+                authorService.deleteAvatar(uuid);
                 return;
             }
         }

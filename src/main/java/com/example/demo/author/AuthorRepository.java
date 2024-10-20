@@ -1,29 +1,13 @@
 package com.example.demo.author;
 
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.RequestScoped;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 
-@ApplicationScoped
-public class AuthorRepository {
+public interface AuthorRepository {
 
-    private final Set<Author> authors = new HashSet<>();
+    List<Author> getAuthors();
 
-    public List<Author> getAuthors() {
-        return new ArrayList<>(authors);
-    }
+    void saveAuthors(Author author);
 
-    public void saveAuthors(Author author) {
-        authors.add(author);
-    }
-
-    public Optional<Author> getAuthorByUUID(UUID uuid) {
-        return getAuthors().stream().filter(author -> author.getId().equals(uuid)).findFirst();
-    }
+    Author getAuthorByUUID(UUID uuid);
 }
