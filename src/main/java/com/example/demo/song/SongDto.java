@@ -1,5 +1,7 @@
 package com.example.demo.song;
 
+import com.example.demo.author.AuthorDto;
+import com.example.demo.musicGenre.MusicGenreDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,4 +24,6 @@ public class SongDto {
     private String title;
     private Double length;
     private LocalDate premiereDate;
+    private AuthorDto author;
+    private MusicGenreDto musicGenre;
 }

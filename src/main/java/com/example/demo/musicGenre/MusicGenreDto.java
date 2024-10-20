@@ -1,6 +1,6 @@
 package com.example.demo.musicGenre;
 
-import com.example.demo.song.Song;
+import com.example.demo.song.SongDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -21,5 +21,5 @@ public class MusicGenreDto {
     private UUID id;
     private String genre;
     private Integer yearOfOrigin;
-    private List<Song> songs;
+    private List<SongDto> songs;
 }

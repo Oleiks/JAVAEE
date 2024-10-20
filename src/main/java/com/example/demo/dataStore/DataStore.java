@@ -38,22 +38,19 @@ public class DataStore {
 
     public void saveAuthors(Author author) {
         Author entity = clone(author);
-        if (entity.getSongs() == null) {
-            entity.setSongs(new ArrayList<>());
-            author.setSongs(new ArrayList<>());
-        }
         if (authors.stream().anyMatch(a -> a.getId().equals(entity.getId()))) {
             throw new EntityExistsException("Author already exists");
         }
-        entity.getSongs().forEach(song -> {
-            if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
-                throw new EntityExistsException("Song doesn't exist");
-            } else {
-                entity.setSongs(new ArrayList<>());
-                song.setAuthor(entity);
-            }
-        });
-        authors.add(author);
+        if(entity.getSongs()!=null){
+            entity.getSongs().forEach(song -> {
+                if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
+                    throw new EntityExistsException("Song doesn't exist");
+                } else {
+                    song.setAuthor(entity);
+                }
+            });
+        }
+        authors.add(entity);
     }
 
     public Author getAuthorByUUID(UUID uuid) {
@@ -67,22 +64,19 @@ public class DataStore {
 
     public void saveMusicGenre(MusicGenre musicGenre) {
         MusicGenre entity = clone(musicGenre);
-        if (entity.getSongs() == null) {
-            entity.setSongs(new ArrayList<>());
-            musicGenre.setSongs(new ArrayList<>());
-        }
-        if (musicGenres.stream().anyMatch(mg -> mg.getId().equals(entity.getId()))) {
+        if (musicGenres.stream().anyMatch(mg -> mg.getId().equals(musicGenre.getId()))) {
             throw new EntityExistsException("Music Genre already exists");
         }
-        entity.getSongs().forEach(song -> {
-            if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
-                throw new EntityExistsException("Song doesn't exist");
-            } else {
-                entity.setSongs(new ArrayList<>());
-                song.setMusicGenre(entity);
-            }
-        });
-        musicGenres.add(musicGenre);
+        if(entity.getSongs()!=null){
+            entity.getSongs().forEach(song -> {
+                if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
+                    throw new EntityExistsException("Song doesn't exist");
+                } else {
+                    song.setMusicGenre(entity);
+                }
+            });
+        }
+        musicGenres.add(entity);
     }
 
     public MusicGenre getMusicGenreByUUID(UUID uuid) {
@@ -96,18 +90,30 @@ public class DataStore {
 
     public void saveSongs(Song song) throws EntityNotFoundException {
         Song entity = clone(song);
-//        entity.setMusicGenre(null);
-//        entity.setAuthor(null);
         if (songs.stream().anyMatch(song1 -> song1.getId().equals(song.getId()))) {
             throw new EntityExistsException("Song already exists");
         }
         if (song.getMusicGenre() != null) {
-            musicGenres.stream().filter(musicGenre -> musicGenre.getId().equals(song.getMusicGenre().getId())).findFirst()
-                    .orElseThrow(() -> new EntityExistsException("Music genre doesn't exist")).getSongs().add(entity);
+            MusicGenre musicGenre=musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(song.getMusicGenre().getId())).findFirst()
+                    .orElseThrow(() -> new EntityExistsException("Music genre doesn't exist"));
+            if(musicGenre.getSongs()!=null){
+                musicGenre.getSongs().add(entity);
+            }
+            else{
+                musicGenre.setSongs(new ArrayList<>());
+                musicGenre.getSongs().add(entity);
+            }
         }
         if (song.getAuthor() != null) {
-            authors.stream().filter(author -> author.getId().equals(song.getAuthor().getId())).findFirst()
-                    .orElseThrow(() -> new EntityExistsException("Author doesn't exist")).getSongs().add(entity);
+            Author author = authors.stream().filter(author1 -> author1.getId().equals(song.getAuthor().getId())).findFirst()
+                    .orElseThrow(() -> new EntityExistsException("Author doesn't exist"));
+            if(author.getSongs()!=null){
+                author.getSongs().add(entity);
+            }
+            else{
+                author.setSongs(new ArrayList<>());
+                author.getSongs().add(entity);
+            }
         }
         songs.add(entity);
     }
