@@ -1,13 +1,13 @@
 package com.example.demo.musicGenre;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 @NoArgsConstructor(force = true)
 public class MusicGenreService {
 
@@ -18,20 +18,20 @@ public class MusicGenreService {
         this.musicGenreRepository = musicGenreRepository;
     }
 
-    public synchronized List<MusicGenreDto> findAll() {
+    public List<MusicGenreDto> findAll() {
         return musicGenreRepository.getMusicGenres().stream().map(MusicGenreMapper::toMusicGenreDto).toList();
     }
 
-    public synchronized MusicGenreDto findById(UUID id) {
+    public MusicGenreDto findById(UUID id) {
         return MusicGenreMapper.toMusicGenreDto(find(id));
     }
 
-    public synchronized void create(MusicGenre musicGenre) {
+    public void create(MusicGenre musicGenre) {
         musicGenre.setId(UUID.randomUUID());
         musicGenreRepository.saveMusicGenre(musicGenre);
     }
 
-    public synchronized void updateMusicGenre(UUID uuid, MusicGenreCommand musicGenreCommand) {
+    public void updateMusicGenre(UUID uuid, MusicGenreCommand musicGenreCommand) {
         MusicGenre musicGenre = find(uuid);
         if (musicGenre != null) {
             if (musicGenreCommand.getGenre() != null) {
@@ -45,5 +45,9 @@ public class MusicGenreService {
 
     private MusicGenre find(UUID id) {
         return musicGenreRepository.getMusicGenreByUUID(id);
+    }
+
+    public void delete(UUID id) {
+        musicGenreRepository.deleteMusicGenreById(id);
     }
 }

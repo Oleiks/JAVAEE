@@ -2,7 +2,7 @@ package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.annotation.Resource;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +15,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 @NoArgsConstructor(force = true)
 public class AuthorService {
 
@@ -29,20 +29,20 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
-    public synchronized List<AuthorDto> findAll() {
+    public List<AuthorDto> findAll() {
         return authorRepository.getAuthors().stream()
                 .map(AuthorMapper::toAuthorDto).toList();
     }
 
-    public synchronized AuthorDto findById(UUID id) {
+    public AuthorDto findById(UUID id) {
         return AuthorMapper.toAuthorDto(find(id));
     }
 
-    public synchronized void create(Author author) {
+    public void create(Author author) {
         authorRepository.saveAuthors(author);
     }
 
-    public synchronized byte[] findAuthorAvatar(UUID id) {
+    public byte[] findAuthorAvatar(UUID id) {
         try {
             System.out.println(fileLocation + id + ".png");
             return Files.readAllBytes(Path.of(fileLocation + id + ".png"));
@@ -51,7 +51,7 @@ public class AuthorService {
         }
     }
 
-    public synchronized void updateAvatar(UUID uuid, InputStream portrait) {
+    public void updateAvatar(UUID uuid, InputStream portrait) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
         try {
@@ -62,7 +62,7 @@ public class AuthorService {
         }
     }
 
-    public synchronized void deleteAvatar(UUID uuid) {
+    public void deleteAvatar(UUID uuid) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
         try {
@@ -72,7 +72,7 @@ public class AuthorService {
         }
     }
 
-    public synchronized void updateAuthor(UUID uuid, AuthorCommand authorCommand) {
+    public void updateAuthor(UUID uuid, AuthorCommand authorCommand) {
         Author author = find(uuid);
         if (authorCommand.getDebutYear() != null) {
             author.setDebutYear(authorCommand.getDebutYear());

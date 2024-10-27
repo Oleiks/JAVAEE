@@ -12,18 +12,19 @@ import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.context.control.RequestContextController;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
-import jakarta.servlet.ServletContextListener;
 import lombok.SneakyThrows;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @ApplicationScoped
-public class InitializedData implements ServletContextListener {
+public class InitializedData {
 
     private final AuthorService authorService;
     private final MusicGenreService musicGenreService;
     private final SongService songService;
+
+    private final RequestContextController requestContextController;
 
     @Inject
     public InitializedData(AuthorService authorService,
@@ -33,6 +34,7 @@ public class InitializedData implements ServletContextListener {
         this.authorService = authorService;
         this.musicGenreService = musicGenreService;
         this.songService = songService;
+        this.requestContextController = requestContextController;
     }
 
     public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
@@ -41,6 +43,7 @@ public class InitializedData implements ServletContextListener {
 
     @SneakyThrows
     private void init() {
+        requestContextController.activate();
         Author author = Author.builder()
                 .id(UUID.fromString("bc72126e-9a5e-4304-a28a-df340312760f"))
                 .name("Kanye West")
@@ -120,5 +123,6 @@ public class InitializedData implements ServletContextListener {
         songService.create(song1);
         songService.create(song2);
         songService.create(song3);
+        requestContextController.deactivate();
     }
 }

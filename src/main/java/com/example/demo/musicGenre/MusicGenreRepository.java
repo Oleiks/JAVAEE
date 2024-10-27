@@ -10,4 +10,6 @@ public interface MusicGenreRepository {
     void saveMusicGenre(MusicGenre musicGenre);
 
     MusicGenre getMusicGenreByUUID(UUID uuid);
+
+    void deleteMusicGenreById(UUID id);
 }

@@ -1,13 +1,13 @@
 package com.example.demo.song;
 
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 @NoArgsConstructor(force = true)
 public class SongService {
 
@@ -18,20 +18,20 @@ public class SongService {
         this.songRepository = songRepository;
     }
 
-    public synchronized List<SongDto> findAll() {
+    public List<SongDto> findAll() {
         return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
     }
 
-    public synchronized SongDto findById(UUID id) {
+    public SongDto findById(UUID id) {
         return SongMapper.toSongDto(find(id));
     }
 
-    public synchronized void create(Song Song) {
+    public void create(Song Song) {
         Song.setId(UUID.randomUUID());
         songRepository.saveSongs(Song);
     }
 
-    public synchronized void updateSong(UUID uuid, SongCommand SongCommand) {
+    public void updateSong(UUID uuid, SongCommand SongCommand) {
         Song Song = find(uuid);
         if (Song != null) {
             if (SongCommand.getTitle() != null) {
@@ -48,5 +48,9 @@ public class SongService {
 
     private Song find(UUID id) {
         return songRepository.getSongByUUID(id);
+    }
+
+    private void delete(UUID id) {
+        songRepository.deleteSongByUUID(id);
     }
 }

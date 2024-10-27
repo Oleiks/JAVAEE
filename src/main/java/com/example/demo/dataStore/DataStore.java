@@ -16,11 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @ApplicationScoped
 @NoArgsConstructor(force = true)
@@ -121,6 +117,16 @@ public class DataStore {
     public Song getSongByUUID(UUID uuid) {
         return getSongs().stream().filter(musicGenre -> musicGenre.getId().equals(uuid)).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Song with id " + uuid + " not found"));
+    }
+
+    public void deleteSongByUUID(UUID uuid) {
+        Song song=getSongByUUID(uuid);
+        songs.remove(song);
+    }
+
+    public void deleteMusicGenreById(UUID musicGenreId) {
+        MusicGenre musicGenre=getMusicGenreByUUID(musicGenreId);
+        musicGenres.remove(musicGenre);
     }
 
     @SneakyThrows

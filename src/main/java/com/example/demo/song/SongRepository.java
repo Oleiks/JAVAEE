@@ -9,4 +9,6 @@ public interface SongRepository {
     void saveSongs(Song Song);
 
     Song getSongByUUID(UUID uuid);
+
+    void deleteSongByUUID(UUID uuid);
 }

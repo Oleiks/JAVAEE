@@ -1,13 +1,13 @@
 package com.example.demo.musicGenre;
 
 import com.example.demo.dataStore.DataStore;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 public class MusicGenreRepositoryImpl implements MusicGenreRepository {
 
     private final DataStore dataStore;
@@ -30,5 +30,10 @@ public class MusicGenreRepositoryImpl implements MusicGenreRepository {
     @Override
     public MusicGenre getMusicGenreByUUID(UUID uuid) {
         return dataStore.getMusicGenreByUUID(uuid);
+    }
+
+    @Override
+    public void deleteMusicGenreById(UUID id) {
+        dataStore.deleteMusicGenreById(id);
     }
 }

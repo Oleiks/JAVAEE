@@ -1,13 +1,13 @@
 package com.example.demo.author;
 
 import com.example.demo.dataStore.DataStore;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@RequestScoped
 public class AuthorRepositoryImpl implements AuthorRepository {
 
     private final DataStore dataStore;
