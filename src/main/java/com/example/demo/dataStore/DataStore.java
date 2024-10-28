@@ -120,6 +120,11 @@ public class DataStore {
     }
 
     public void deleteSongByUUID(UUID uuid) {
+        Song song=getSongByUUID(uuid);
+        UUID musicGenreId=song.getMusicGenre().getId();
+        MusicGenre musicGenre= musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(musicGenreId)).findFirst()
+                .orElseThrow(() -> new EntityNotFoundException("Song with id " + musicGenreId + " not found"));
+        musicGenre.getSongs().removeIf(song1 -> song1.getId().equals(uuid));
         songs.removeIf(s->s.getId().equals(uuid));
     }
 

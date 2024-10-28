@@ -7,9 +7,6 @@ import jakarta.faces.convert.FacesConverter;
 
 import java.util.UUID;
 
-/**
- * Faces converter for {@link UUID}. Automatically applied to inputs and parameters.
- */
 @FacesConverter(forClass = UUID.class)
 public class UuidConverter implements Converter<UUID> {
 

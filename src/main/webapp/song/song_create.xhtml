@@ -5,11 +5,6 @@
                 xmlns:f="jakarta.faces.core"
                 template="/WEB-INF/template/main.xhtml">
 
-    <f:metadata>
-        <f:viewParam name="id" value="#{songEdit.id}" required="true"/>
-        <f:viewAction action="#{songEdit.init()}"/>
-    </f:metadata>
-
     <ui:define name="content">
         <article>
             <header><h2>Edit character info</h2></header>
@@ -17,7 +12,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-floating">
-                            <h:inputText id="title" value="#{songEdit.song.title}" styleClass="form-control"/>
+                            <h:inputText id="title" value="#{songCreate.song.title}" styleClass="form-control"/>
                             <h:outputLabel for="title" value="Name:" styleClass="form-label"/>
                         </div>
                     </div>
@@ -26,7 +21,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-floating">
-                            <h:inputText id="length" value="#{songEdit.song.length}" styleClass="form-control"/>
+                            <h:inputText id="length" value="#{songCreate.song.length}" styleClass="form-control"/>
                             <h:outputLabel for="length" value="Length:" styleClass="form-label"/>
                         </div>
                     </div>
@@ -35,7 +30,7 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-floating">
-                            <h:inputText id="dateInput" value="#{songEdit.song.premiereDate}" styleClass="form-control">
+                            <h:inputText id="dateInput" value="#{songCreate.song.premiereDate}" styleClass="form-control">
                             </h:inputText>
                             <h:outputLabel for="dateInput" value="Enter Date:" />
                         </div>
@@ -43,9 +38,22 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-4 p-2">
+                        <fieldset>
+                            <legend class="form-label fs-6">Music Genre:</legend>
+                            <h:selectOneMenu id="musicGenreSelect" value="#{songCreate.song.musicGenre}"
+                                             styleClass="form-select">
+                                <f:selectItems value="#{songCreate.musicGenres}" var="musicGenre"
+                                               itemValue="#{musicGenre.id}" itemLabel="#{musicGenre.genre}" />
+                            </h:selectOneMenu>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <div class="row">
                     <div class="col-2 p-2 text-center">
-                        <h:commandButton styleClass="btn btn-primary" value="Update"
-                                         action="#{songEdit.saveAction()}"/>
+                        <h:commandButton styleClass="btn btn-primary" value="Create"
+                                         action="#{songCreate.saveAction()}"/>
                     </div>
                     <div class="col-2 p-2 text-center">
                         <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>

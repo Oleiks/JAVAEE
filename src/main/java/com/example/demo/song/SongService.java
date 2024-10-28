@@ -1,5 +1,6 @@
 package com.example.demo.song;
 
+import com.example.demo.musicGenre.MusicGenreService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,12 @@ public class SongService {
 
     private final SongRepository songRepository;
 
+    private final MusicGenreService musicGenreService;
+
     @Inject
-    public SongService(SongRepository songRepository) {
+    public SongService(SongRepository songRepository, MusicGenreService musicGenreService) {
         this.songRepository = songRepository;
+        this.musicGenreService = musicGenreService;
     }
 
     public List<SongDto> findAll() {
@@ -27,23 +31,25 @@ public class SongService {
     }
 
     public void create(Song Song) {
-        Song.setId(UUID.randomUUID());
         songRepository.saveSongs(Song);
     }
 
-    public void updateSong(UUID uuid, SongCommand songCommand) {
-        Song Song = find(uuid);
-        if (Song != null) {
-            if (songCommand.getTitle() != null) {
-                Song.setTitle(songCommand.getTitle());
-            }
-            if (songCommand.getLength() != null) {
-                Song.setLength(songCommand.getLength());
-            }
-            if (songCommand.getPremiereDate() != null) {
-                Song.setPremiereDate(songCommand.getPremiereDate());
-            }
+    public void createSong(SongCommand songCommand) {
+        Song Song = new Song();
+        Song.setId(UUID.randomUUID());
+        if (songCommand.getTitle() != null) {
+            Song.setTitle(songCommand.getTitle());
         }
+        if (songCommand.getLength() != null) {
+            Song.setLength(songCommand.getLength());
+        }
+        if (songCommand.getPremiereDate() != null) {
+            Song.setPremiereDate(songCommand.getPremiereDate());
+        }
+        if(songCommand.getMusicGenre()!=null){
+            Song.setMusicGenre(musicGenreService.find(songCommand.getMusicGenre()));
+        }
+        songRepository.saveSongs(Song);
     }
 
 
@@ -66,7 +72,7 @@ public class SongService {
         return songRepository.getSongByUUID(id);
     }
 
-    private void delete(UUID id) {
+    public void delete(UUID id) {
         songRepository.deleteSongByUUID(id);
     }
 }

@@ -10,6 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -25,4 +26,6 @@ public class SongCommand {
     private Double length;
 
     private LocalDate premiereDate;
+
+    private UUID musicGenre;
 }

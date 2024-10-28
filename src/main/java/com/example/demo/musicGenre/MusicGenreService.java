@@ -27,7 +27,6 @@ public class MusicGenreService {
     }
 
     public void create(MusicGenre musicGenre) {
-        musicGenre.setId(UUID.randomUUID());
         musicGenreRepository.saveMusicGenre(musicGenre);
     }
 
@@ -43,7 +42,7 @@ public class MusicGenreService {
         }
     }
 
-    private MusicGenre find(UUID id) {
+    public MusicGenre find(UUID id) {
         return musicGenreRepository.getMusicGenreByUUID(id);
     }
 
