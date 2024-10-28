@@ -120,13 +120,23 @@ public class DataStore {
     }
 
     public void deleteSongByUUID(UUID uuid) {
-        Song song=getSongByUUID(uuid);
-        songs.remove(song);
+        songs.removeIf(s->s.getId().equals(uuid));
     }
 
     public void deleteMusicGenreById(UUID musicGenreId) {
         MusicGenre musicGenre=getMusicGenreByUUID(musicGenreId);
-        musicGenres.remove(musicGenre);
+        if (musicGenres.contains(musicGenre)) {
+            System.out.println("Found music genre in set, attempting to remove...");
+        } else {
+            System.out.println("Music genre not found in set, unable to remove.");
+        }
+        musicGenre.getSongs().forEach(s->{
+            Song song=getSongByUUID(s.getId());
+            Author author=getAuthorByUUID(s.getAuthor().getId());
+            author.getSongs().remove(song);
+            songs.remove(song);
+        });
+        musicGenres.removeIf(musicG->musicG.getId().equals(musicGenreId));
     }
 
     @SneakyThrows

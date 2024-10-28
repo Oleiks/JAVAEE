@@ -76,10 +76,12 @@ public class InitializedData {
 
         MusicGenre musicGenre = MusicGenre.builder()
                 .genre("Rap")
+                .yearOfOrigin(1973)
                 .id(UUID.randomUUID())
                 .build();
         MusicGenre musicGenre1 = MusicGenre.builder()
                 .genre("Rock")
+                .yearOfOrigin(1950)
                 .id(UUID.randomUUID())
                 .build();
 

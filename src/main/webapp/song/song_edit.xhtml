@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{songEdit.id}" required="true"/>
+        <f:viewAction action="#{songEdit.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2>Edit character info</h2></header>
+            <h:form styleClass="container" enctype="multipart/form-data">
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-floating">
+                            <h:inputText id="title" value="#{songEdit.song.title}" styleClass="form-control"/>
+                            <h:outputLabel for="title" value="Name:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-floating">
+                            <h:inputText id="length" value="#{songEdit.song.length}" styleClass="form-control"/>
+                            <h:outputLabel for="length" value="Length:" styleClass="form-label"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4 p-2">
+                        <div class="form-floating">
+                            <h:inputText id="dateInput" value="#{songEdit.song.premiereDate}">
+                                <f:convertDateTime
+                                        pattern="yyyy-MM-dd"
+                                        timezone="UTC"
+                                        locale="en_US" />
+                            </h:inputText>
+                            <h:outputLabel for="dateInput" value="Enter Date:" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-primary" value="Update"
+                                         action="#{SongEdit.saveAction()}"/>
+                    </div>
+                    <div class="col-2 p-2 text-center">
+                        <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
+                    </div>
+                </div>
+            </h:form>
+        </article>
+    </ui:define>
+
+</ui:composition>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:f="jakarta.faces.core"
+                template="/WEB-INF/template/main.xhtml">
+
+    <f:metadata>
+        <f:viewParam name="id" value="#{musicGenreView.id}" required="true"/>
+        <f:viewAction action="#{musicGenreView.init()}"/>
+    </f:metadata>
+
+    <ui:define name="content">
+        <article>
+            <header><h2><h:outputText value="#{musicGenreView.musicGenre.genre}"/></h2></header>
+            <div class="container">
+                <div class="row">
+                    <div class="col-4">
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Genre
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{musicGenreView.musicGenre.genre}"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-2">
+                            <div class="col-6">
+                                Year of origin
+                            </div>
+                            <div class="col-6">
+                                <h:outputText value="#{musicGenreView.musicGenre.yearOfOrigin}"/>
+                            </div>
+                        </div>
+                </div>
+                    <article class="text--justified">
+                        <header><h2>Songs</h2></header>
+
+                        <h:dataTable value="#{musicGenreView.musicGenre.songs}" var="song"
+                                     styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+                            <h:column>
+                                <f:facet name="header">Title</f:facet>
+                                <h:outputText value="#{song.title}"/>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">View</f:facet>
+                                <h:link outcome="/song/song_view.xhtml" value="View">
+                                    <f:param name="id" value="#{song.id}"/>
+                                </h:link>
+                            </h:column>
+
+                            <h:column>
+                                <f:facet name="header">Edit</f:facet>
+                                <h:link outcome="/song/song_edit.xhtml" value="Edit">
+                                    <f:param name="id" value="#{song.id}"/>
+                                </h:link>
+                            </h:column>
+
+                        </h:dataTable>
+                    </article>
+                </div>
+            </div>
+        </article>
+    </ui:define>
+
+</ui:composition>

@@ -31,17 +31,33 @@ public class SongService {
         songRepository.saveSongs(Song);
     }
 
-    public void updateSong(UUID uuid, SongCommand SongCommand) {
+    public void updateSong(UUID uuid, SongCommand songCommand) {
         Song Song = find(uuid);
         if (Song != null) {
-            if (SongCommand.getTitle() != null) {
-                Song.setTitle(SongCommand.getTitle());
+            if (songCommand.getTitle() != null) {
+                Song.setTitle(songCommand.getTitle());
             }
-            if (SongCommand.getLength() != null) {
-                Song.setLength(SongCommand.getLength());
+            if (songCommand.getLength() != null) {
+                Song.setLength(songCommand.getLength());
             }
-            if (SongCommand.getPremiereDate() != null) {
-                Song.setPremiereDate(SongCommand.getPremiereDate());
+            if (songCommand.getPremiereDate() != null) {
+                Song.setPremiereDate(songCommand.getPremiereDate());
+            }
+        }
+    }
+
+
+    public void updateSong(UUID uuid, SongDto songDto) {
+        Song Song = find(uuid);
+        if (Song != null) {
+            if (songDto.getTitle() != null) {
+                Song.setTitle(songDto.getTitle());
+            }
+            if (songDto.getPremiereDate() != null) {
+                Song.setLength(songDto.getLength());
+            }
+            if (songDto.getPremiereDate() != null) {
+                Song.setPremiereDate(songDto.getPremiereDate());
             }
         }
     }
