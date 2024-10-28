@@ -42,7 +42,6 @@ public class SongCreate implements Serializable {
     }
 
     public String saveAction() {
-        System.out.println("save action");
         songService.createSong(song);
         return "music_genre_list?faces-redirect=true";
     }
