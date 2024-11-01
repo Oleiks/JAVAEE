@@ -130,11 +130,6 @@ public class DataStore {
 
     public void deleteMusicGenreById(UUID musicGenreId) {
         MusicGenre musicGenre=getMusicGenreByUUID(musicGenreId);
-        if (musicGenres.contains(musicGenre)) {
-            System.out.println("Found music genre in set, attempting to remove...");
-        } else {
-            System.out.println("Music genre not found in set, unable to remove.");
-        }
         musicGenre.getSongs().forEach(s->{
             Song song=getSongByUUID(s.getId());
             Author author=getAuthorByUUID(s.getAuthor().getId());
