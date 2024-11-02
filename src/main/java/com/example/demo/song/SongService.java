@@ -1,10 +1,12 @@
 package com.example.demo.song;
 
+import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreService;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -24,6 +26,15 @@ public class SongService {
 
     public List<SongDto> findAll() {
         return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
+    }
+
+    public List<SongDto> findAllByMusicGenreId(UUID uuid) {
+        return songRepository.getSongs().stream().filter(song -> song.getMusicGenre().getId().equals(uuid)).map(SongMapper::toSongDto).toList();
+    }
+
+    public SongDto findByMusicGenreId(UUID musicGenreUuid, UUID songUuid) {
+        return songRepository.getSongs().stream().filter(song -> song.getId().equals(songUuid) && song.getMusicGenre().getId().equals(musicGenreUuid)).findAny().map(SongMapper::toSongDto)
+                .orElseThrow(() -> new EntityNotFoundException("Song with uuid " + songUuid + " in music genre with uuid " + musicGenreUuid + " not found"));
     }
 
     public SongDto findById(UUID id) {
@@ -46,7 +57,7 @@ public class SongService {
         if (songCommand.getPremiereDate() != null) {
             Song.setPremiereDate(songCommand.getPremiereDate());
         }
-        if(songCommand.getMusicGenre()!=null){
+        if (songCommand.getMusicGenre() != null) {
             Song.setMusicGenre(musicGenreService.find(songCommand.getMusicGenre()));
         }
         songRepository.saveSongs(Song);
@@ -54,18 +65,44 @@ public class SongService {
 
 
     public void updateSong(UUID uuid, SongDto songDto) {
-        Song Song = find(uuid);
-        if (Song != null) {
-            if (songDto.getTitle() != null) {
-                Song.setTitle(songDto.getTitle());
-            }
-            if (songDto.getPremiereDate() != null) {
-                Song.setLength(songDto.getLength());
-            }
-            if (songDto.getPremiereDate() != null) {
-                Song.setPremiereDate(songDto.getPremiereDate());
-            }
+        Song song = find(uuid);
+        editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
+    }
+
+    public void updateSong(UUID songId, UUID musicGenreId, PatchSongRequest request) {
+        Song song = find(songId);
+        if (!song.getMusicGenre().getId().equals(musicGenreId)) {
+            throw new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId);
         }
+        editSong(song, request.getTitle(), request.getPremiereDate(), request.getLength());
+//        musicGenreService.findById(musicGenreId).getSongs().stream()
+//                .filter(s->s.getId().equals(songId)).findFirst().map(s->editSong(s, request.getTitle(), request.getPremiereDate(), request.getLength()))
+//                .orElseThrow(()->new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId));
+    }
+
+    private void editSong(Song song, String title, LocalDate premiereDate, Double length) {
+        if (title != null) {
+            song.setTitle(title);
+        }
+        if (premiereDate != null) {
+            song.setLength(length);
+        }
+        if (premiereDate != null) {
+            song.setPremiereDate(premiereDate);
+        }
+    }
+
+    private SongDto editSong(SongDto song, String title, LocalDate premiereDate, Double length) {
+        if (title != null) {
+            song.setTitle(title);
+        }
+        if (premiereDate != null) {
+            song.setLength(length);
+        }
+        if (premiereDate != null) {
+            song.setPremiereDate(premiereDate);
+        }
+        return song;
     }
 
     private Song find(UUID id) {
@@ -74,5 +111,14 @@ public class SongService {
 
     public void delete(UUID id) {
         songRepository.deleteSongByUUID(id);
+    }
+
+    public void delete(UUID musicGenreUuid, UUID songUuid) throws EntityNotFoundException {
+        Song song = find(songUuid);
+        if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+            songRepository.deleteSongByUUID(songUuid);
+        } else {
+            throw new EntityNotFoundException("Avatar not found");
+        }
     }
 }

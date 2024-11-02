@@ -10,12 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.util.*;
 
 @ApplicationScoped
@@ -37,7 +32,7 @@ public class DataStore {
         if (authors.stream().anyMatch(a -> a.getId().equals(entity.getId()))) {
             throw new EntityExistsException("Author already exists");
         }
-        if(entity.getSongs()!=null){
+        if (entity.getSongs() != null) {
             entity.getSongs().forEach(song -> {
                 if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
                     throw new EntityExistsException("Song doesn't exist");
@@ -63,7 +58,7 @@ public class DataStore {
         if (musicGenres.stream().anyMatch(mg -> mg.getId().equals(musicGenre.getId()))) {
             throw new EntityExistsException("Music Genre already exists");
         }
-        if(entity.getSongs()!=null){
+        if (entity.getSongs() != null) {
             entity.getSongs().forEach(song -> {
                 if (songs.stream().noneMatch(song1 -> song1.getId().equals(song.getId()))) {
                     throw new EntityExistsException("Song doesn't exist");
@@ -90,12 +85,11 @@ public class DataStore {
             throw new EntityExistsException("Song already exists");
         }
         if (song.getMusicGenre() != null) {
-            MusicGenre musicGenre=musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(song.getMusicGenre().getId())).findFirst()
+            MusicGenre musicGenre = musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(song.getMusicGenre().getId())).findFirst()
                     .orElseThrow(() -> new EntityExistsException("Music genre doesn't exist"));
-            if(musicGenre.getSongs()!=null){
+            if (musicGenre.getSongs() != null) {
                 musicGenre.getSongs().add(entity);
-            }
-            else{
+            } else {
                 musicGenre.setSongs(new ArrayList<>());
                 musicGenre.getSongs().add(entity);
             }
@@ -103,10 +97,9 @@ public class DataStore {
         if (song.getAuthor() != null) {
             Author author = authors.stream().filter(author1 -> author1.getId().equals(song.getAuthor().getId())).findFirst()
                     .orElseThrow(() -> new EntityExistsException("Author doesn't exist"));
-            if(author.getSongs()!=null){
+            if (author.getSongs() != null) {
                 author.getSongs().add(entity);
-            }
-            else{
+            } else {
                 author.setSongs(new ArrayList<>());
                 author.getSongs().add(entity);
             }
@@ -115,28 +108,28 @@ public class DataStore {
     }
 
     public Song getSongByUUID(UUID uuid) {
-        return getSongs().stream().filter(musicGenre -> musicGenre.getId().equals(uuid)).findFirst()
+        return getSongs().stream().filter(song -> song.getId().equals(uuid)).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Song with id " + uuid + " not found"));
     }
 
     public void deleteSongByUUID(UUID uuid) {
-        Song song=getSongByUUID(uuid);
-        UUID musicGenreId=song.getMusicGenre().getId();
-        MusicGenre musicGenre= musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(musicGenreId)).findFirst()
+        Song song = getSongByUUID(uuid);
+        UUID musicGenreId = song.getMusicGenre().getId();
+        MusicGenre musicGenre = musicGenres.stream().filter(musicGenre1 -> musicGenre1.getId().equals(musicGenreId)).findFirst()
                 .orElseThrow(() -> new EntityNotFoundException("Song with id " + musicGenreId + " not found"));
         musicGenre.getSongs().removeIf(song1 -> song1.getId().equals(uuid));
-        songs.removeIf(s->s.getId().equals(uuid));
+        songs.removeIf(s -> s.getId().equals(uuid));
     }
 
     public void deleteMusicGenreById(UUID musicGenreId) {
-        MusicGenre musicGenre=getMusicGenreByUUID(musicGenreId);
-        musicGenre.getSongs().forEach(s->{
-            Song song=getSongByUUID(s.getId());
-            Author author=getAuthorByUUID(s.getAuthor().getId());
+        MusicGenre musicGenre = getMusicGenreByUUID(musicGenreId);
+        musicGenre.getSongs().forEach(s -> {
+            Song song = getSongByUUID(s.getId());
+            Author author = getAuthorByUUID(s.getAuthor().getId());
             author.getSongs().remove(song);
             songs.remove(song);
         });
-        musicGenres.removeIf(musicG->musicG.getId().equals(musicGenreId));
+        musicGenres.removeIf(musicG -> musicG.getId().equals(musicGenreId));
     }
 
     @SneakyThrows

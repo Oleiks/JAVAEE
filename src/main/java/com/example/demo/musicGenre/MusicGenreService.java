@@ -30,15 +30,13 @@ public class MusicGenreService {
         musicGenreRepository.saveMusicGenre(musicGenre);
     }
 
-    public void updateMusicGenre(UUID uuid, MusicGenreCommand musicGenreCommand) {
+    public void updateMusicGenre(UUID uuid, PatchMusicGenreRequest request) {
         MusicGenre musicGenre = find(uuid);
-        if (musicGenre != null) {
-            if (musicGenreCommand.getGenre() != null) {
-                musicGenre.setGenre(musicGenreCommand.getGenre());
-            }
-            if (musicGenreCommand.getYearOfOrigin() != null) {
-                musicGenre.setYearOfOrigin(musicGenreCommand.getYearOfOrigin());
-            }
+        if (request.getGenre() != null) {
+            musicGenre.setGenre(request.getGenre());
+        }
+        if (request.getYearOfOrigin() != null) {
+            musicGenre.setYearOfOrigin(request.getYearOfOrigin());
         }
     }
 

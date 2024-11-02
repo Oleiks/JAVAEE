@@ -62,3 +62,54 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/songs/
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
+
+###
+DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6
+
+###
+PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
+Content-Type: application/json
+
+{
+  "genre": "TEST",
+  "id": "0a9e3220-6f00-469a-ac30-b56b3de96759",
+  "yearOfOrigin": 2002
+}
+
+###
+PATCH http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/0a9e3220-6f00-469a-ac30-b56b3de96759
+Content-Type: application/json
+
+{
+  "genre": "Zmiana",
+  "yearOfOrigin": 5000
+}
+
+###
+PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs
+Content-Type: application/json
+
+{
+  "title": "TEST",
+  "length": 3.32,
+  "premiereDate": "2002-05-10"
+}
+
+###
+PATCH http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs/2a1855c3-5050-44cd-b76f-889bcbea798a
+Content-Type: application/json
+
+{
+  "title": "TESTre",
+  "length": 3.323,
+  "premiereDate": "2002-05-11"
+}
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs

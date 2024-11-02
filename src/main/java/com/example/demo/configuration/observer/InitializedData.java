@@ -77,12 +77,12 @@ public class InitializedData {
         MusicGenre musicGenre = MusicGenre.builder()
                 .genre("Rap")
                 .yearOfOrigin(1973)
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("16727996-09dc-4220-aacd-051069e17ba6"))
                 .build();
         MusicGenre musicGenre1 = MusicGenre.builder()
                 .genre("Rock")
                 .yearOfOrigin(1950)
-                .id(UUID.randomUUID())
+                .id(UUID.fromString("7154908a-0aba-4967-814b-86740407acfb"))
                 .build();
 
         musicGenreService.create(musicGenre);
