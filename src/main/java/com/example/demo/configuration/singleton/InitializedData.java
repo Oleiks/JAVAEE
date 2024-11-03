@@ -1,4 +1,4 @@
-package com.example.demo.configuration.observer;
+package com.example.demo.configuration.singleton;
 
 import com.example.demo.author.Author;
 import com.example.demo.author.AuthorService;
@@ -7,44 +7,49 @@ import com.example.demo.musicGenre.MusicGenre;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.song.Song;
 import com.example.demo.song.SongService;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.*;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.context.Initialized;
 import jakarta.enterprise.context.control.RequestContextController;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-@ApplicationScoped
+@Singleton
+@Startup
+@TransactionAttribute(value = TransactionAttributeType.NOT_SUPPORTED)
+@NoArgsConstructor
 public class InitializedData {
 
-    private final AuthorService authorService;
-    private final MusicGenreService musicGenreService;
-    private final SongService songService;
+    private AuthorService authorService;
+    private MusicGenreService musicGenreService;
+    private SongService songService;
 
-    private final RequestContextController requestContextController;
+    private RequestContextController requestContextController;
 
-    @Inject
-    public InitializedData(AuthorService authorService,
-                           RequestContextController requestContextController,
-                           MusicGenreService musicGenreService,
-                           SongService songService) {
+    @EJB
+    public void setAuthorService(AuthorService authorService) {
         this.authorService = authorService;
+    }
+
+    @EJB
+    public void setMusicGenreService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
+    }
+
+    @EJB
+    public void setSongService(SongService songService) {
         this.songService = songService;
-        this.requestContextController = requestContextController;
     }
 
-    public void contextInitialized(@Observes @Initialized(ApplicationScoped.class) Object init) {
-        init();
-    }
-
+    @PostConstruct
     @SneakyThrows
     private void init() {
-        requestContextController.activate();
-
         Author author = Author.builder()
                 .id(UUID.fromString("bc72126e-9a5e-4304-a28a-df340312760f"))
                 .name("Kanye West")
@@ -126,6 +131,5 @@ public class InitializedData {
         songService.create(song1);
         songService.create(song2);
         songService.create(song3);
-        requestContextController.deactivate();
     }
 }

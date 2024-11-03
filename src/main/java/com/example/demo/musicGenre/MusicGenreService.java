@@ -1,6 +1,8 @@
 package com.example.demo.musicGenre;
 
 import com.example.demo.exception.EntityNotFoundException;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -9,7 +11,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class MusicGenreService {
 

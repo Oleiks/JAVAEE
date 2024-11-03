@@ -22,6 +22,4 @@ public class Author {
     private String name;
     private Integer debutYear;
     private Type type;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Song> songs;
 }

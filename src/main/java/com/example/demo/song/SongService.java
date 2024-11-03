@@ -3,6 +3,8 @@ package com.example.demo.song;
 import com.example.demo.author.AuthorRepository;
 import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -12,7 +14,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class SongService {
 
