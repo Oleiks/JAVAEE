@@ -1,39 +1,40 @@
 package com.example.demo.song;
 
-import com.example.demo.dataStore.DataStore;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequestScoped
 public class SongRepositoryImpl implements SongRepository {
 
-    private final DataStore dataStore;
+    private EntityManager em;
 
-    @Inject
-    public SongRepositoryImpl(DataStore dataStore) {
-        this.dataStore = dataStore;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public List<Song> getSongs() {
-        return dataStore.getSongs();
+        return em.createQuery("select s from Song s", Song.class).getResultList();
     }
 
     @Override
     public void saveSongs(Song Song) {
-        dataStore.saveSongs(Song);
+        em.persist(Song);
     }
 
     @Override
-    public Song getSongByUUID(UUID uuid) {
-        return dataStore.getSongByUUID(uuid);
+    public Optional<Song> getSongByUUID(UUID uuid) {
+        return Optional.ofNullable(em.find(Song.class, uuid));
     }
 
     @Override
     public void deleteSongByUUID(UUID uuid) {
-        dataStore.deleteSongByUUID(uuid);
+        em.remove(em.find(Song.class, uuid));
     }
 }

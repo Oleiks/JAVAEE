@@ -1,14 +1,7 @@
 package com.example.demo.musicGenre;
 
-import com.example.demo.song.SongDto;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @Builder
@@ -21,5 +14,4 @@ public class MusicGenreDto {
     private UUID id;
     private String genre;
     private int yearOfOrigin;
-    private List<SongDto> songs;
 }

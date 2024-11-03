@@ -1,34 +1,36 @@
 package com.example.demo.author;
 
-import com.example.demo.dataStore.DataStore;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequestScoped
 public class AuthorRepositoryImpl implements AuthorRepository {
 
-    private final DataStore dataStore;
+    private EntityManager em;
 
-    @Inject
-    public AuthorRepositoryImpl(DataStore dataStore) {
-        this.dataStore = dataStore;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
+
 
     @Override
     public List<Author> getAuthors() {
-        return dataStore.getAuthors();
+        return em.createQuery("select a from Author a", Author.class).getResultList();
     }
 
     @Override
     public void saveAuthors(Author author) {
-        dataStore.saveAuthors(author);
+        em.persist(author);
     }
 
     @Override
-    public Author getAuthorByUUID(UUID uuid) {
-        return dataStore.getAuthorByUUID(uuid);
+    public Optional<Author> getAuthorByUUID(UUID uuid) {
+        return Optional.ofNullable(em.find(Author.class, uuid));
     }
 }

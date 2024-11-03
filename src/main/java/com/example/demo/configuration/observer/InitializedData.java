@@ -44,6 +44,7 @@ public class InitializedData {
     @SneakyThrows
     private void init() {
         requestContextController.activate();
+
         Author author = Author.builder()
                 .id(UUID.fromString("bc72126e-9a5e-4304-a28a-df340312760f"))
                 .name("Kanye West")
