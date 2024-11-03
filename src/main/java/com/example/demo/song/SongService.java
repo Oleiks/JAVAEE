@@ -93,12 +93,8 @@ public class SongService {
             throw new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId);
         }
         editSong(song, request.getTitle(), request.getPremiereDate(), request.getLength());
-//        musicGenreService.findById(musicGenreId).getSongs().stream()
-//                .filter(s->s.getId().equals(songId)).findFirst().map(s->editSong(s, request.getTitle(), request.getPremiereDate(), request.getLength()))
-//                .orElseThrow(()->new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId));
     }
 
-    @Transactional
     private void editSong(Song song, String title, LocalDate premiereDate, Double length) {
         if (title != null) {
             song.setTitle(title);
@@ -109,20 +105,6 @@ public class SongService {
         if (premiereDate != null) {
             song.setPremiereDate(premiereDate);
         }
-    }
-
-    @Transactional
-    private SongDto editSong(SongDto song, String title, LocalDate premiereDate, Double length) {
-        if (title != null) {
-            song.setTitle(title);
-        }
-        if (premiereDate != null) {
-            song.setLength(length);
-        }
-        if (premiereDate != null) {
-            song.setPremiereDate(premiereDate);
-        }
-        return song;
     }
 
     private Song find(UUID id) {
