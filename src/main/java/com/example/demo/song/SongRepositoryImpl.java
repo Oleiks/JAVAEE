@@ -37,4 +37,9 @@ public class SongRepositoryImpl implements SongRepository {
     public void deleteSongByUUID(UUID uuid) {
         em.remove(em.find(Song.class, uuid));
     }
+
+    @Override
+    public void updateSong(Song Song) {
+        em.merge(Song);
+    }
 }

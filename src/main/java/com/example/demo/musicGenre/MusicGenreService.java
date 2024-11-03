@@ -42,6 +42,7 @@ public class MusicGenreService {
         if (request.getYearOfOrigin() != null) {
             musicGenre.setYearOfOrigin(request.getYearOfOrigin());
         }
+        musicGenreRepository.updateMusicGenre(musicGenre);
     }
 
     public MusicGenre find(UUID id) {

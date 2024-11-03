@@ -37,4 +37,9 @@ public class MusicGenreRepositoryImpl implements MusicGenreRepository {
     public void deleteMusicGenreById(UUID id) {
         em.remove(em.find(MusicGenre.class, id));
     }
+
+    @Override
+    public void updateMusicGenre(MusicGenre musicGenre) {
+        em.merge(musicGenre);
+    }
 }

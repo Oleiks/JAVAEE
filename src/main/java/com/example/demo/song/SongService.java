@@ -105,6 +105,7 @@ public class SongService {
         if (premiereDate != null) {
             song.setPremiereDate(premiereDate);
         }
+        songRepository.updateSong(song);
     }
 
     private Song find(UUID id) {

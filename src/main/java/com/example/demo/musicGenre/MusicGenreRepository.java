@@ -13,4 +13,6 @@ public interface MusicGenreRepository {
     Optional<MusicGenre> getMusicGenreByUUID(UUID uuid);
 
     void deleteMusicGenreById(UUID id);
+
+    void updateMusicGenre(MusicGenre musicGenre);
 }
