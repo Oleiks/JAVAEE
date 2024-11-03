@@ -2,6 +2,8 @@ package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.annotation.Resource;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -33,6 +35,7 @@ public class AuthorService {
         this.authorRepository = authorRepository;
     }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public List<AuthorDto> findAll() {
         return authorRepository.getAuthors().stream()
                 .map(AuthorMapper::toAuthorDto).toList();
@@ -42,12 +45,11 @@ public class AuthorService {
         return AuthorMapper.toAuthorDto(find(id));
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.USER)
     public void create(Author author) {
         authorRepository.saveAuthors(author);
     }
 
-    @Transactional
     public byte[] findAuthorAvatar(UUID id) {
         try {
             System.out.println(fileLocation + id + ".png");
@@ -57,7 +59,6 @@ public class AuthorService {
         }
     }
 
-    @Transactional
     public void updateAvatar(UUID uuid, InputStream portrait) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
@@ -69,7 +70,6 @@ public class AuthorService {
         }
     }
 
-    @Transactional
     public void deleteAvatar(UUID uuid) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
@@ -80,7 +80,6 @@ public class AuthorService {
         }
     }
 
-    @Transactional
     public void updateAuthor(UUID uuid, AuthorCommand authorCommand) {
         Author author = find(uuid);
         if (authorCommand.getDebutYear() != null) {

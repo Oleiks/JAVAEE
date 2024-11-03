@@ -1,7 +1,7 @@
 package com.example.demo.controller.rest;
 
 import com.example.demo.musicGenre.*;
-import jakarta.inject.Inject;
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 
@@ -10,10 +10,10 @@ import java.util.UUID;
 
 @Path("/musicGenres")
 public class MusicGenreController {
-    private final MusicGenreService musicGenreService;
+    private MusicGenreService musicGenreService;
 
-    @Inject
-    public MusicGenreController(MusicGenreService musicGenreService) {
+    @EJB
+    public void setService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
     }
 

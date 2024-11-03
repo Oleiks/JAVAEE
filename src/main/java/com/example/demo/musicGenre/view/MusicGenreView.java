@@ -4,6 +4,7 @@ import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -26,12 +27,16 @@ public class MusicGenreView implements Serializable {
     @Getter
     private MusicGenreDto musicGenre;
 
-    private final MusicGenreService musicGenreService;
-    private final SongService songService;
+    private MusicGenreService musicGenreService;
+    private SongService songService;
 
-    @Inject
-    public MusicGenreView(MusicGenreService musicGenreService, SongService songService) {
+    @EJB
+    public void setMusicGenreService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
+    }
+
+    @EJB
+    public void setSongService(SongService songService) {
         this.songService = songService;
     }
 

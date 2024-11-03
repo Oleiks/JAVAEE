@@ -1,5 +1,6 @@
 package com.example.demo.song;
 
+import com.example.demo.author.Author;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -41,5 +42,12 @@ public class SongRepositoryImpl implements SongRepository {
     @Override
     public void updateSong(Song Song) {
         em.merge(Song);
+    }
+
+    @Override
+    public List<SongDto> findAllByAuthor(Author author) {
+        return em.createQuery("select s from Song s where s.author = :author", Song.class)
+                .setParameter("author", author)
+                .getResultList().stream().map(SongMapper::toSongDto).toList();
     }
 }

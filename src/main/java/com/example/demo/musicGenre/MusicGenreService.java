@@ -1,6 +1,9 @@
 package com.example.demo.musicGenre;
 
+import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
+import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -22,6 +25,7 @@ public class MusicGenreService {
         this.musicGenreRepository = musicGenreRepository;
     }
 
+    @PermitAll
     public List<MusicGenreDto> findAll() {
         return musicGenreRepository.getMusicGenres().stream().map(MusicGenreMapper::toMusicGenreDto).toList();
     }
@@ -30,12 +34,11 @@ public class MusicGenreService {
         return MusicGenreMapper.toMusicGenreDto(find(id));
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public void create(MusicGenre musicGenre) {
         musicGenreRepository.saveMusicGenre(musicGenre);
     }
 
-    @Transactional
     public void updateMusicGenre(UUID uuid, PatchMusicGenreRequest request) {
         MusicGenre musicGenre = find(uuid);
         if (request.getGenre() != null) {
@@ -52,7 +55,7 @@ public class MusicGenreService {
                 .orElseThrow(() -> new EntityNotFoundException("Music genre with uuid " + id + " not found"));
     }
 
-    @Transactional
+    @RolesAllowed(UserRoles.ADMIN)
     public void delete(UUID id) {
         musicGenreRepository.deleteMusicGenreById(id);
     }

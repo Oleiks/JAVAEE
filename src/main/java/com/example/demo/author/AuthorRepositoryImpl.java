@@ -3,6 +3,7 @@ package com.example.demo.author;
 import jakarta.enterprise.context.Dependent;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
@@ -33,5 +34,16 @@ public class AuthorRepositoryImpl implements AuthorRepository {
     @Override
     public Optional<Author> getAuthorByUUID(UUID uuid) {
         return Optional.ofNullable(em.find(Author.class, uuid));
+    }
+
+    @Override
+    public Optional<Author> getAuthorByName(String name) {
+        try {
+            return Optional.of(em.createQuery("select a from Author a where a.name = :name", Author.class)
+                    .setParameter("name", name)
+                    .getSingleResult());
+        } catch (NoResultException ex) {
+            return Optional.empty();
+        }
     }
 }
