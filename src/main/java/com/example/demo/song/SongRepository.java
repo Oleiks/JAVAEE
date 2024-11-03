@@ -12,4 +12,6 @@ public interface SongRepository {
     Optional<Song> getSongByUUID(UUID uuid);
 
     void deleteSongByUUID(UUID uuid);
+
+    void updateSong(Song Song);
 }

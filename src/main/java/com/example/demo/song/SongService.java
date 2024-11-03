@@ -5,7 +5,6 @@ import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
@@ -108,6 +107,7 @@ public class SongService {
         if (premiereDate != null) {
             song.setPremiereDate(premiereDate);
         }
+        songRepository.updateSong(song);
     }
 
     private Song find(UUID id) {

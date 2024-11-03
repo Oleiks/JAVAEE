@@ -3,7 +3,6 @@ package com.example.demo.musicGenre;
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
@@ -45,6 +44,7 @@ public class MusicGenreService {
         if (request.getYearOfOrigin() != null) {
             musicGenre.setYearOfOrigin(request.getYearOfOrigin());
         }
+        musicGenreRepository.updateMusicGenre(musicGenre);
     }
 
     public MusicGenre find(UUID id) {

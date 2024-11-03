@@ -1,7 +1,6 @@
 package com.example.demo.song;
 
 import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -37,5 +36,10 @@ public class SongRepositoryImpl implements SongRepository {
     @Override
     public void deleteSongByUUID(UUID uuid) {
         em.remove(em.find(Song.class, uuid));
+    }
+
+    @Override
+    public void updateSong(Song Song) {
+        em.merge(Song);
     }
 }
