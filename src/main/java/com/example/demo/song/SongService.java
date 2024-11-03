@@ -6,12 +6,10 @@ import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
 import jakarta.annotation.security.PermitAll;
-import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;

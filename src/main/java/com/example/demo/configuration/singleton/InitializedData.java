@@ -11,13 +11,16 @@ import com.example.demo.song.SongService;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.DeclareRoles;
 import jakarta.annotation.security.RunAs;
-import jakarta.ejb.*;
-import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.enterprise.context.Initialized;
+import jakarta.ejb.DependsOn;
+import jakarta.ejb.EJB;
+import jakarta.ejb.Singleton;
+import jakarta.ejb.Startup;
+import jakarta.ejb.TransactionAttribute;
+import jakarta.ejb.TransactionAttributeType;
 import jakarta.enterprise.context.control.RequestContextController;
-import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
@@ -38,10 +41,14 @@ public class InitializedData {
     private MusicGenreService musicGenreService;
     private SongService songService;
 
+    @Inject
+    private Pbkdf2PasswordHash passwordHash;
+
     private RequestContextController requestContextController;
 
     @Inject
     private SecurityContext securityContext;
+
 
     @EJB
     public void setAuthorService(AuthorService authorService) {
@@ -98,57 +105,57 @@ public class InitializedData {
         authorService.create(author2);
         authorService.create(author3);
         authorService.create(author4);
-//
-//        MusicGenre musicGenre = MusicGenre.builder()
-//                .genre("Rap")
-//                .yearOfOrigin(1973)
-//                .id(UUID.fromString("16727996-09dc-4220-aacd-051069e17ba6"))
-//                .build();
-//        MusicGenre musicGenre1 = MusicGenre.builder()
-//                .genre("Rock")
-//                .yearOfOrigin(1950)
-//                .id(UUID.fromString("7154908a-0aba-4967-814b-86740407acfb"))
-//                .build();
-//
-//        musicGenreService.create(musicGenre);
-//        musicGenreService.create(musicGenre1);
-//
-//        Song song = Song.builder()
-//                .id(UUID.randomUUID())
-//                .musicGenre(musicGenre1)
-//                .author(author3)
-//                .title("Back In Black")
-//                .length(4.14)
-//                .premiereDate(LocalDate.of(1980, 7, 25))
-//                .build();
-//        Song song1 = Song.builder()
-//                .id(UUID.randomUUID())
-//                .musicGenre(musicGenre)
-//                .author(author)
-//                .title("Famous")
-//                .length(3.17)
-//                .premiereDate(LocalDate.of(2016, 2, 14))
-//                .build();
-//        Song song2 = Song.builder()
-//                .id(UUID.randomUUID())
-//                .musicGenre(musicGenre)
-//                .author(author4)
-//                .title("DNA")
-//                .length(3.06)
-//                .premiereDate(LocalDate.of(2017, 4, 14))
-//                .build();
-//        Song song3 = Song.builder()
-//                .id(UUID.randomUUID())
-//                .musicGenre(musicGenre1)
-//                .author(author2)
-//                .title("Heavy Is the Crown")
-//                .length(2.48)
-//                .premiereDate(LocalDate.of(2024, 9, 24))
-//                .build();
-//
-//        songService.create(song);
-//        songService.create(song1);
-//        songService.create(song2);
-//        songService.create(song3);
+
+        MusicGenre musicGenre = MusicGenre.builder()
+                .genre("Rap")
+                .yearOfOrigin(1973)
+                .id(UUID.fromString("16727996-09dc-4220-aacd-051069e17ba6"))
+                .build();
+        MusicGenre musicGenre1 = MusicGenre.builder()
+                .genre("Rock")
+                .yearOfOrigin(1950)
+                .id(UUID.fromString("7154908a-0aba-4967-814b-86740407acfb"))
+                .build();
+
+        musicGenreService.create(musicGenre);
+        musicGenreService.create(musicGenre1);
+
+        Song song = Song.builder()
+                .id(UUID.randomUUID())
+                .musicGenre(musicGenre1)
+                .author(author3)
+                .title("Back In Black")
+                .length(4.14)
+                .premiereDate(LocalDate.of(1980, 7, 25))
+                .build();
+        Song song1 = Song.builder()
+                .id(UUID.randomUUID())
+                .musicGenre(musicGenre)
+                .author(author)
+                .title("Famous")
+                .length(3.17)
+                .premiereDate(LocalDate.of(2016, 2, 14))
+                .build();
+        Song song2 = Song.builder()
+                .id(UUID.randomUUID())
+                .musicGenre(musicGenre)
+                .author(author4)
+                .title("DNA")
+                .length(3.06)
+                .premiereDate(LocalDate.of(2017, 4, 14))
+                .build();
+        Song song3 = Song.builder()
+                .id(UUID.randomUUID())
+                .musicGenre(musicGenre1)
+                .author(author2)
+                .title("Heavy Is the Crown")
+                .length(2.48)
+                .premiereDate(LocalDate.of(2024, 9, 24))
+                .build();
+
+        songService.create(song);
+        songService.create(song1);
+        songService.create(song2);
+        songService.create(song3);
     }
 }

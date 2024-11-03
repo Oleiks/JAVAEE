@@ -2,12 +2,10 @@ package com.example.demo.musicGenre;
 
 import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class MusicGenreService {
         this.musicGenreRepository = musicGenreRepository;
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.USER)
     public List<MusicGenreDto> findAll() {
         return musicGenreRepository.getMusicGenres().stream().map(MusicGenreMapper::toMusicGenreDto).toList();
     }

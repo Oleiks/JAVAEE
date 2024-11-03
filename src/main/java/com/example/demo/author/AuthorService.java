@@ -2,13 +2,11 @@ package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.annotation.Resource;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
-import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
@@ -31,6 +29,9 @@ public class AuthorService {
     private String fileLocation;
 
     @Inject
+    private Pbkdf2PasswordHash passwordHash;
+
+    @Inject
     public AuthorService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
     }
@@ -47,6 +48,7 @@ public class AuthorService {
 
     @RolesAllowed(UserRoles.USER)
     public void create(Author author) {
+        author.setPassword(passwordHash.generate(author.getPassword().toCharArray()));
         authorRepository.saveAuthors(author);
     }
 
@@ -93,7 +95,7 @@ public class AuthorService {
         }
     }
 
-    private Author find(UUID id) {
+    public Author find(UUID id) {
         return authorRepository.getAuthorByUUID(id)
                 .orElseThrow(() -> new EntityNotFoundException("Author with uuid " + id + " not found"));
     }
