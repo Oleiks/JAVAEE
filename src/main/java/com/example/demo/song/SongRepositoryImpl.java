@@ -1,5 +1,6 @@
 package com.example.demo.song;
 
+import com.example.demo.musicGenre.MusicGenre;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -21,6 +22,13 @@ public class SongRepositoryImpl implements SongRepository {
     @Override
     public List<Song> getSongs() {
         return em.createQuery("select s from Song s", Song.class).getResultList();
+    }
+
+    @Override
+    public List<Song> getSongsByMusicGenre(MusicGenre musicGenre) {
+        return em.createQuery("select s from Song s where s.musicGenre=:musicGenre", Song.class)
+                .setParameter("musicGenre", musicGenre)
+                .getResultList();
     }
 
     @Override

@@ -36,7 +36,7 @@ public class SongService {
     }
 
     public List<SongDto> findAllByMusicGenreId(UUID uuid) {
-        return songRepository.getSongs().stream().filter(song -> song.getMusicGenre().getId().equals(uuid)).map(SongMapper::toSongDto).toList();
+        return songRepository.getSongsByMusicGenre(musicGenreRepository.getMusicGenreByUUID(uuid).orElseThrow(() -> new EntityNotFoundException("MusicGenre doesn't exist."))).stream().map(SongMapper::toSongDto).toList();
     }
 
     public SongDto findByMusicGenreId(UUID musicGenreUuid, UUID songUuid) {

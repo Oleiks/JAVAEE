@@ -18,7 +18,6 @@ public class AuthorRepositoryImpl implements AuthorRepository {
         this.em = em;
     }
 
-
     @Override
     public List<Author> getAuthors() {
         return em.createQuery("select a from Author a", Author.class).getResultList();
