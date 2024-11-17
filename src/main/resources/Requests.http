@@ -58,19 +58,19 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/a25b09aa-4c2b-4159-ab07-
 DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/songs/
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
 
 ###
-DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6
+DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb
 
 ###
 PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
@@ -92,7 +92,7 @@ Content-Type: application/json
 }
 
 ###
-PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs
+PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs
 Content-Type: application/json
 
 {

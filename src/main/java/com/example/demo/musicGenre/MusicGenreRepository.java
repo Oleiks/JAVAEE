@@ -1,6 +1,7 @@
 package com.example.demo.musicGenre;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface MusicGenreRepository {
@@ -9,7 +10,9 @@ public interface MusicGenreRepository {
 
     void saveMusicGenre(MusicGenre musicGenre);
 
-    MusicGenre getMusicGenreByUUID(UUID uuid);
+    Optional<MusicGenre> getMusicGenreByUUID(UUID uuid);
 
     void deleteMusicGenreById(UUID id);
+
+    void updateMusicGenre(MusicGenre musicGenre);
 }

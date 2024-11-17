@@ -1,39 +1,45 @@
 package com.example.demo.musicGenre;
 
-import com.example.demo.dataStore.DataStore;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RequestScoped
 public class MusicGenreRepositoryImpl implements MusicGenreRepository {
 
-    private final DataStore dataStore;
+    private EntityManager em;
 
-    @Inject
-    public MusicGenreRepositoryImpl(DataStore dataStore) {
-        this.dataStore = dataStore;
+    @PersistenceContext
+    public void setEm(EntityManager em) {
+        this.em = em;
     }
 
     @Override
     public List<MusicGenre> getMusicGenres() {
-        return dataStore.getMusicGenres();
+        return em.createQuery("select mg from MusicGenre mg", MusicGenre.class).getResultList();
     }
 
     @Override
     public void saveMusicGenre(MusicGenre musicGenre) {
-        dataStore.saveMusicGenre(musicGenre);
+        em.persist(musicGenre);
     }
 
     @Override
-    public MusicGenre getMusicGenreByUUID(UUID uuid) {
-        return dataStore.getMusicGenreByUUID(uuid);
+    public Optional<MusicGenre> getMusicGenreByUUID(UUID uuid) {
+        return Optional.ofNullable(em.find(MusicGenre.class, uuid));
     }
 
     @Override
     public void deleteMusicGenreById(UUID id) {
-        dataStore.deleteMusicGenreById(id);
+        em.remove(em.find(MusicGenre.class, id));
+    }
+
+    @Override
+    public void updateMusicGenre(MusicGenre musicGenre) {
+        em.merge(musicGenre);
     }
 }

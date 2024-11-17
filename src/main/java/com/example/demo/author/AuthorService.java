@@ -2,8 +2,9 @@ package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.annotation.Resource;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import lombok.NoArgsConstructor;
 
 import java.io.IOException;
@@ -15,7 +16,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.UUID;
 
-@RequestScoped
+@ApplicationScoped
 @NoArgsConstructor(force = true)
 public class AuthorService {
 
@@ -38,10 +39,12 @@ public class AuthorService {
         return AuthorMapper.toAuthorDto(find(id));
     }
 
+    @Transactional
     public void create(Author author) {
         authorRepository.saveAuthors(author);
     }
 
+    @Transactional
     public byte[] findAuthorAvatar(UUID id) {
         try {
             System.out.println(fileLocation + id + ".png");
@@ -51,6 +54,7 @@ public class AuthorService {
         }
     }
 
+    @Transactional
     public void updateAvatar(UUID uuid, InputStream portrait) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
@@ -62,6 +66,7 @@ public class AuthorService {
         }
     }
 
+    @Transactional
     public void deleteAvatar(UUID uuid) {
         Author author = find(uuid);
         Path path = Paths.get(fileLocation + author.getId() + ".png");
@@ -72,6 +77,7 @@ public class AuthorService {
         }
     }
 
+    @Transactional
     public void updateAuthor(UUID uuid, AuthorCommand authorCommand) {
         Author author = find(uuid);
         if (authorCommand.getDebutYear() != null) {
@@ -86,6 +92,7 @@ public class AuthorService {
     }
 
     private Author find(UUID id) {
-        return authorRepository.getAuthorByUUID(id);
+        return authorRepository.getAuthorByUUID(id)
+                .orElseThrow(() -> new EntityNotFoundException("Author with uuid " + id + " not found"));
     }
 }
