@@ -15,6 +15,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,20 +44,23 @@ public class MusicGenreController {
 
     @DELETE
     @Path("/{id}")
-    public void deleteMusicGenre(@PathParam("id") UUID id) {
+    public Response deleteMusicGenre(@PathParam("id") UUID id) {
         musicGenreService.delete(id);
+        return Response.ok().build();
     }
 
     @PATCH
     @Path("/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void patchMusicGenre(@PathParam("id") UUID id, PatchMusicGenreRequest request) {
+    public Response patchMusicGenre(@PathParam("id") UUID id, PatchMusicGenreRequest request) {
         musicGenreService.updateMusicGenre(id, request);
+        return Response.ok().build();
     }
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void putMusicGenre(PutMusicGenreRequest request) {
+    public Response putMusicGenre(PutMusicGenreRequest request) {
         musicGenreService.create(MusicGenreMapper.toMusicGenre(request));
+        return Response.ok().build();
     }
 }

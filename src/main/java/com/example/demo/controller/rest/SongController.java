@@ -17,6 +17,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.UUID;
@@ -55,22 +56,25 @@ public class SongController {
 
     @DELETE
     @Path("/{musicGenreId}/songs/{songId}")
-    public void deleteSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId) {
+    public Response deleteSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId) {
         songService.delete(musicGenreId, songId);
+        return Response.ok().build();
     }
 
     @PATCH
     @Path("/{musicGenreId}/songs/{songId}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void patchSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId, PatchSongRequest request) {
+    public Response patchSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId, PatchSongRequest request) {
         songService.updateSong(songId, musicGenreId, request);
+        return Response.ok().build();
     }
 
     @PUT
     @Path("/{musicGenreId}/songs")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void putSong(@PathParam("musicGenreId") UUID musicGenreId, PutSongRequest request) {
+    public Response putSong(@PathParam("musicGenreId") UUID musicGenreId, PutSongRequest request) {
         MusicGenre musicGenre = musicGenreService.find(musicGenreId);
         songService.create(SongMapper.toSong(request, musicGenre));
+        return Response.ok().build();
     }
 }
