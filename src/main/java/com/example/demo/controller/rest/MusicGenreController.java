@@ -5,7 +5,7 @@ import com.example.demo.musicGenre.MusicGenreMapper;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.musicGenre.PatchMusicGenreRequest;
 import com.example.demo.musicGenre.PutMusicGenreRequest;
-import jakarta.inject.Inject;
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -22,10 +22,10 @@ import java.util.UUID;
 
 @Path("/musicGenres")
 public class MusicGenreController {
-    private final MusicGenreService musicGenreService;
+    private MusicGenreService musicGenreService;
 
-    @Inject
-    public MusicGenreController(MusicGenreService musicGenreService) {
+    @EJB
+    public void setService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
     }
 

@@ -2,6 +2,7 @@ package com.example.demo.musicGenre.view;
 
 import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
+import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -14,10 +15,10 @@ import java.util.List;
 public class MusicGenreList implements Serializable {
 
     private List<MusicGenreDto> genres;
-    private final MusicGenreService musicGenreService;
+    private  MusicGenreService musicGenreService;
 
-    @Inject
-    public MusicGenreList(MusicGenreService musicGenreService) {
+    @EJB
+    public void setMusicGenreService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
     }
 

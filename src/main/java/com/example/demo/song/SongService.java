@@ -1,18 +1,23 @@
 package com.example.demo.song;
 
+import com.example.demo.author.Author;
 import com.example.demo.author.AuthorRepository;
+import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
-import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.annotation.security.PermitAll;
+import jakarta.ejb.LocalBean;
+import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.transaction.Transactional;
+import jakarta.security.enterprise.SecurityContext;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
-@ApplicationScoped
+@LocalBean
+@Stateless
 @NoArgsConstructor(force = true)
 public class SongService {
 
@@ -22,17 +27,27 @@ public class SongService {
 
     private final AuthorRepository authorRepository;
 
+    private final SecurityContext securityContext;
+
     @Inject
     public SongService(SongRepository songRepository,
                        MusicGenreRepository musicGenreRepository,
-                       AuthorRepository authorRepository) {
+                       AuthorRepository authorRepository,
+                       @SuppressWarnings("CdiInjectionPointsInspection") SecurityContext securityContext) {
         this.songRepository = songRepository;
         this.musicGenreRepository = musicGenreRepository;
         this.authorRepository = authorRepository;
+        this.securityContext = securityContext;
     }
 
+    @PermitAll
     public List<SongDto> findAll() {
-        return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
+        }
+        Author user = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+        return songRepository.findAllByAuthor(user);
     }
 
     public List<SongDto> findAllByMusicGenreId(UUID uuid) {
@@ -48,7 +63,6 @@ public class SongService {
         return SongMapper.toSongDto(find(id));
     }
 
-    @Transactional
     public void create(Song song) {
         if (songRepository.getSongByUUID(song.getId()).isPresent()) {
             throw new IllegalArgumentException("Song with uuid " + song.getId() + " already exists");
@@ -61,7 +75,6 @@ public class SongService {
                 .ifPresent(mg -> mg.getSongs().add(song));
     }
 
-    @Transactional
     public void createSong(SongCommand songCommand) {
         Song Song = new Song();
         Song.setId(UUID.randomUUID());
@@ -80,13 +93,11 @@ public class SongService {
         songRepository.saveSongs(Song);
     }
 
-    @Transactional
     public void updateSong(UUID uuid, SongDto songDto) {
         Song song = find(uuid);
         editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
     }
 
-    @Transactional
     public void updateSong(UUID songId, UUID musicGenreId, PatchSongRequest request) {
         Song song = find(songId);
         if (!song.getMusicGenre().getId().equals(musicGenreId)) {
@@ -113,12 +124,10 @@ public class SongService {
                 .orElseThrow(() -> new EntityNotFoundException("Song with uuid " + id + " not found"));
     }
 
-    @Transactional
     public void delete(UUID id) {
         songRepository.deleteSongByUUID(id);
     }
 
-    @Transactional
     public void delete(UUID musicGenreUuid, UUID songUuid) throws EntityNotFoundException {
         Song song = find(songUuid);
         if (song.getMusicGenre().getId().equals(musicGenreUuid)) {

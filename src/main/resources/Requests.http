@@ -67,7 +67,8 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/songs/
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
+Authorization: Basic S2FueWVfV2VzdDphZG1pbmFkbWlu
 
 ###
 DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb

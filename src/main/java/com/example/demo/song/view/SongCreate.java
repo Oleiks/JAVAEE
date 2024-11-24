@@ -4,6 +4,8 @@ import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.song.SongCommand;
 import com.example.demo.song.SongService;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
@@ -17,19 +19,27 @@ import java.util.UUID;
 @Named
 public class SongCreate implements Serializable {
 
-    private final SongService songService;
+    private SongService songService;
 
-    private final MusicGenreService musicGenreService;
+    private MusicGenreService musicGenreService;
 
     @Getter
-    private final List<MusicGenreDto> musicGenres;
+    private List<MusicGenreDto> musicGenres;
 
     private SongCommand song;
 
-    @Inject
-    public SongCreate(SongService songService, MusicGenreService musicGenreService) {
-        this.songService = songService;
+    @EJB
+    public void setMusicGenreService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
+    }
+
+    @EJB
+    public void setSongService(SongService songService) {
+        this.songService = songService;
+    }
+
+    @PostConstruct
+    public void init(){
         musicGenres = musicGenreService.findAll();
     }
 

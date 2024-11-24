@@ -11,4 +11,6 @@ public interface AuthorRepository {
     void saveAuthors(Author author);
 
     Optional<Author> getAuthorByUUID(UUID uuid);
+
+    Optional<Author> getAuthorByName(String name);
 }

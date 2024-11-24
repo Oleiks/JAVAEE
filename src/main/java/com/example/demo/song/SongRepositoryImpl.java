@@ -1,7 +1,8 @@
 package com.example.demo.song;
 
+import com.example.demo.author.Author;
+import jakarta.enterprise.context.Dependent;
 import com.example.demo.musicGenre.MusicGenre;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -9,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-@RequestScoped
+@Dependent
 public class SongRepositoryImpl implements SongRepository {
 
     private EntityManager em;
@@ -49,5 +50,12 @@ public class SongRepositoryImpl implements SongRepository {
     @Override
     public void updateSong(Song Song) {
         em.merge(Song);
+    }
+
+    @Override
+    public List<SongDto> findAllByAuthor(Author author) {
+        return em.createQuery("select s from Song s where s.author = :author", Song.class)
+                .setParameter("author", author)
+                .getResultList().stream().map(SongMapper::toSongDto).toList();
     }
 }

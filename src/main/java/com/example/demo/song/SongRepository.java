@@ -1,5 +1,7 @@
 package com.example.demo.song;
 
+import com.example.demo.author.Author;
+
 import com.example.demo.musicGenre.MusicGenre;
 
 import java.util.List;
@@ -16,6 +18,8 @@ public interface SongRepository {
     void deleteSongByUUID(UUID uuid);
 
     void updateSong(Song Song);
+
+    List<SongDto> findAllByAuthor(Author author);
 
     List<Song> getSongsByMusicGenre(MusicGenre musicGenre);
 }

@@ -2,6 +2,8 @@ package com.example.demo.song.view;
 
 import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
+import jakarta.annotation.PostConstruct;
+import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
@@ -26,12 +28,13 @@ public class SongEdit implements Serializable {
     @Getter
     private SongDto song;
 
-    @Inject
-    public SongEdit(SongService songService) {
+    @EJB
+    public void setSongService(SongService songService) {
         this.songService = songService;
     }
 
-    public void init() throws IOException {
+    @PostConstruct
+    public void init(){
         song = songService.findById(id);
     }
 

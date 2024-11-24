@@ -7,7 +7,6 @@ import com.example.demo.song.PutSongRequest;
 import com.example.demo.song.SongDto;
 import com.example.demo.song.SongMapper;
 import com.example.demo.song.SongService;
-import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.GET;
@@ -16,6 +15,7 @@ import jakarta.ws.rs.PUT;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
+import jakarta.ejb.EJB;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
@@ -24,13 +24,17 @@ import java.util.UUID;
 
 @Path("/musicGenres")
 public class SongController {
-    private final SongService songService;
-    private final MusicGenreService musicGenreService;
+    private SongService songService;
+    private MusicGenreService musicGenreService;
 
-    @Inject
-    public SongController(SongService songService, MusicGenreService musicGenreService) {
-        this.songService = songService;
+    @EJB
+    public void setMusicGenreService(MusicGenreService musicGenreService) {
         this.musicGenreService = musicGenreService;
+    }
+
+    @EJB
+    public void setSongService(SongService songService) {
+        this.songService = songService;
     }
 
     @GET

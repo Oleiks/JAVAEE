@@ -22,6 +22,11 @@ public class Author {
     private String name;
     private Integer debutYear;
     private Type type;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
-    private List<Song> songs;
+    @ToString.Exclude
+    private String password;
+    @CollectionTable(name = "users__roles", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
 }
