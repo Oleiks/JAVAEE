@@ -114,3 +114,10 @@ Content-Type: application/json
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
+Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
+
+###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
