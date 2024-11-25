@@ -5,7 +5,6 @@ import com.example.demo.author.AuthorRepository;
 import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
-import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -101,10 +100,10 @@ public class SongService {
         editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
     }
 
-    @RolesAllowed({UserRoles.ADMIN,UserRoles.USER})
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void updateSong(UUID songId, UUID musicGenreId, PatchSongRequest request) {
         Song song = find(songId);
-        if(securityContext.isCallerInRole(UserRoles.USER)&&song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())){
+        if (securityContext.isCallerInRole(UserRoles.USER) && song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) {
             throw new NotAuthorizedException("Song doesn't belong to author");
         }
         if (!song.getMusicGenre().getId().equals(musicGenreId)) {
@@ -135,7 +134,7 @@ public class SongService {
         songRepository.deleteSongByUUID(id);
     }
 
-    @RolesAllowed({UserRoles.ADMIN,UserRoles.USER})
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void delete(UUID musicGenreUuid, UUID songUuid) throws EntityNotFoundException {
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             Song song = find(songUuid);
@@ -146,7 +145,7 @@ public class SongService {
             }
         } else if (securityContext.isCallerInRole(UserRoles.USER)) {
             Song song = find(songUuid);
-            if(!song.getAuthor().getId().equals(securityContext.getCallerPrincipal().getName())) {
+            if (!song.getAuthor().getId().equals(securityContext.getCallerPrincipal().getName())) {
                 throw new NotAuthorizedException("Songs doesn't belong to author");
             }
             if (song.getMusicGenre().getId().equals(musicGenreUuid)) {

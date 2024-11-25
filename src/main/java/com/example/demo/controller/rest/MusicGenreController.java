@@ -1,7 +1,6 @@
 package com.example.demo.controller.rest;
 
 import com.example.demo.exception.EntityNotFoundException;
-import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreMapper;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.musicGenre.PatchMusicGenreRequest;
