@@ -2,6 +2,7 @@ package com.example.demo.author;
 
 import com.example.demo.exception.EntityNotFoundException;
 import jakarta.annotation.Resource;
+import jakarta.annotation.security.PermitAll;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
@@ -46,8 +47,9 @@ public class AuthorService {
         return AuthorMapper.toAuthorDto(find(id));
     }
 
-    @RolesAllowed(UserRoles.USER)
+    @PermitAll
     public void create(Author author) {
+        author.setId(UUID.randomUUID());
         author.setPassword(passwordHash.generate(author.getPassword().toCharArray()));
         authorRepository.saveAuthors(author);
     }

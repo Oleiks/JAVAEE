@@ -16,11 +16,6 @@ import lombok.SneakyThrows;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * EJB singleton can be forced to start automatically when application starts. Injects proxy to the services and fills
- * database with default content. When using persistence storage application instance should be initialized only during
- * first run in order to init database with starting data. Good place to create first default admin user.
- */
 @Singleton
 @Startup
 @TransactionAttribute(value = TransactionAttributeType.REQUIRED)

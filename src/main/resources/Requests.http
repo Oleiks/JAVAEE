@@ -58,7 +58,7 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/a25b09aa-4c2b-4159-ab07-
 DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/songs/
@@ -117,7 +117,7 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-a
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
-Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
+Authorization: Basic S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/

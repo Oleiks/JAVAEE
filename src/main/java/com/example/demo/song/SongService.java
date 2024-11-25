@@ -6,10 +6,12 @@ import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
 import com.example.demo.musicGenre.MusicGenreRepository;
 import jakarta.annotation.security.PermitAll;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.ws.rs.NotAuthorizedException;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
@@ -40,7 +42,7 @@ public class SongService {
         this.securityContext = securityContext;
     }
 
-    @PermitAll
+    @RolesAllowed(UserRoles.ADMIN)
     public List<SongDto> findAll() {
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
@@ -63,6 +65,7 @@ public class SongService {
         return SongMapper.toSongDto(find(id));
     }
 
+    @RolesAllowed(UserRoles.ADMIN)
     public void create(Song song) {
         if (songRepository.getSongByUUID(song.getId()).isPresent()) {
             throw new IllegalArgumentException("Song with uuid " + song.getId() + " already exists");
@@ -98,8 +101,12 @@ public class SongService {
         editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
     }
 
+    @RolesAllowed({UserRoles.ADMIN,UserRoles.USER})
     public void updateSong(UUID songId, UUID musicGenreId, PatchSongRequest request) {
         Song song = find(songId);
+        if(securityContext.isCallerInRole(UserRoles.USER)&&song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())){
+            throw new NotAuthorizedException("Song doesn't belong to author");
+        }
         if (!song.getMusicGenre().getId().equals(musicGenreId)) {
             throw new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId);
         }
@@ -128,12 +135,25 @@ public class SongService {
         songRepository.deleteSongByUUID(id);
     }
 
+    @RolesAllowed({UserRoles.ADMIN,UserRoles.USER})
     public void delete(UUID musicGenreUuid, UUID songUuid) throws EntityNotFoundException {
-        Song song = find(songUuid);
-        if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
-            songRepository.deleteSongByUUID(songUuid);
-        } else {
-            throw new EntityNotFoundException("Avatar not found");
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            Song song = find(songUuid);
+            if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+                songRepository.deleteSongByUUID(songUuid);
+            } else {
+                throw new EntityNotFoundException("Songs doesn't belong to this music genre");
+            }
+        } else if (securityContext.isCallerInRole(UserRoles.USER)) {
+            Song song = find(songUuid);
+            if(!song.getAuthor().getId().equals(securityContext.getCallerPrincipal().getName())) {
+                throw new NotAuthorizedException("Songs doesn't belong to author");
+            }
+            if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+                songRepository.deleteSongByUUID(songUuid);
+            } else {
+                throw new EntityNotFoundException("Songs doesn't belong to this music genre");
+            }
         }
     }
 }
