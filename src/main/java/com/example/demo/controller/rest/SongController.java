@@ -66,8 +66,12 @@ public class SongController {
     @GET
     @Path("/{musicGenreId}/songs/{songId}")
     @Produces(MediaType.APPLICATION_JSON)
-    public SongDto getSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId) {
-        return songService.findByMusicGenreId(musicGenreId, songId);
+    public Response getSong(@PathParam("musicGenreId") UUID musicGenreId, @PathParam("songId") UUID songId) {
+        try {
+            return Response.ok(songService.findByIdC(musicGenreId, songId)).build();
+        } catch (Exception e) {
+            return Response.status(404).entity(e.getMessage()).build();
+        }
     }
 
     @DELETE
@@ -107,7 +111,7 @@ public class SongController {
     public Response putSong(@PathParam("musicGenreId") UUID musicGenreId, PutSongRequest request) {
         try {
             MusicGenre musicGenre = musicGenreService.find(musicGenreId);
-            songService.create(SongMapper.toSong(request, musicGenre));
+            songService.createSongs(SongMapper.toSong(request, musicGenre));
             return Response.ok().build();
         } catch (EJBException e) {
             return Response.status(401).entity(e.getMessage()).build();

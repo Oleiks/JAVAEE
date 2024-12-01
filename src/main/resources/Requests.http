@@ -58,13 +58,16 @@ GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/a25b09aa-4c2b-4159-ab07-
 DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a28a-df340312760f/avatar
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
+// @no-cookie-jar
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/
+Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/songs/
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs/c0ce46e2-9f21-4240-8dcd-78e9e8b651cc
+Authorization: Basic QUMvREM6dXNlcnVzZXI=
 
 ###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
@@ -74,13 +77,26 @@ Authorization: Basic S2FueWVfV2VzdDphZG1pbmFkbWlu
 DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb
 
 ###
+// @no-cookie-jar
 PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres
+Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
 Content-Type: application/json
 
 {
   "genre": "TEST",
   "id": "0a9e3220-6f00-469a-ac30-b56b3de96759",
   "yearOfOrigin": 2002
+}
+
+###
+PUT http://localhost:9080/demo-1.0-SNAPSHOT/api/authors
+Content-Type: application/json
+
+{
+  "name": "TEST",
+  "debutYear": "2000",
+  "type": "SOLO",
+  "password": "haslo"
 }
 
 ###
@@ -103,7 +119,8 @@ Content-Type: application/json
 }
 
 ###
-PATCH http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs/2a1855c3-5050-44cd-b76f-889bcbea798a
+PATCH http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6/songs/8eaa5fca-fc0d-4bfe-a6e9-8befe3e8c082
+Authorization: Basic S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=
 Content-Type: application/json
 
 {
@@ -116,8 +133,36 @@ Content-Type: application/json
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/a835307d-d166-4201-adab-5c238e4f075d/songs
 
 ###
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
 Authorization: Basic S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=
 
 ###
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
+Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
+
+###
 GET http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
+
+#Kend S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=
+#
+#Admin S2FueWUgV2VzdDphZG1pbmFkbWlu
+
+###
+// @no-cookie-jar
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
+Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
+
+###
+// @no-cookie-jar
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/songs
+Authorization: Basic S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=
+
+###
+// @no-cookie-jar
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6/songs/9d234d61-10f9-49f7-839e-c739662669db
+Authorization: Basic QUMvREM6dXNlcnVzZXI=
+
+###
+// @no-cookie-jar
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/16727996-09dc-4220-aacd-051069e17ba6/songs/9d234d61-10f9-49f7-839e-c739662669db
+Authorization: Basic S2VuZHJpY2sgTGFtYXI6dXNlcnVzZXI=

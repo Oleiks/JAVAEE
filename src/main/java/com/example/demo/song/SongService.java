@@ -41,7 +41,7 @@ public class SongService {
         this.securityContext = securityContext;
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public List<SongDto> findAll() {
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             return songRepository.getSongs().stream().map(SongMapper::toSongDto).toList();
@@ -64,8 +64,38 @@ public class SongService {
         return SongMapper.toSongDto(find(id));
     }
 
-    @RolesAllowed(UserRoles.ADMIN)
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    public SongDto findByIdC(UUID musicGenreUuid, UUID songUuid) {
+        if (securityContext.isCallerInRole(UserRoles.USER)) {
+            Song song=find(songUuid);
+//            if(song.getMusicGenre().getId().equals(musicGenreUuid)){
+//                throw new EntityNotFoundException("Song not found");
+//            }
+//            if(song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName()))
+//            {
+//                throw new EntityNotFoundException("Song not found");
+//            }
+            return SongMapper.toSongDto(song);
+        }
+        return SongMapper.toSongDto(find(songUuid));
+    }
+
     public void create(Song song) {
+        if (songRepository.getSongByUUID(song.getId()).isPresent()) {
+            throw new IllegalArgumentException("Song with uuid " + song.getId() + " already exists");
+        }
+        if (musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId()).isEmpty()) {
+            throw new IllegalArgumentException("MusicGenre with uuid " + song.getId() + " doesn't exists");
+        }
+        songRepository.saveSongs(song);
+        musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId())
+                .ifPresent(mg -> mg.getSongs().add(song));
+    }
+
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
+    public void createSongs(Song song) {
+        Author author= authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(()-> new EntityNotFoundException("Author not found"));
+        song.setAuthor(author);
         if (songRepository.getSongByUUID(song.getId()).isPresent()) {
             throw new IllegalArgumentException("Song with uuid " + song.getId() + " already exists");
         }

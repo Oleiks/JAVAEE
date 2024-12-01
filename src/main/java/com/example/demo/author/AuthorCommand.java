@@ -23,4 +23,6 @@ public class AuthorCommand {
     private Integer debutYear;
 
     private Type type;
+
+    private String password;
 }

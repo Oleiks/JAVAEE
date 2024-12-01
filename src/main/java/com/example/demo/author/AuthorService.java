@@ -54,6 +54,12 @@ public class AuthorService {
         authorRepository.saveAuthors(author);
     }
 
+    @PermitAll
+    public void createAuthor(AuthorCommand author) {
+        author.setPassword(passwordHash.generate(author.getPassword().toCharArray()));
+        authorRepository.saveAuthors(AuthorMapper.toAuthor(author));
+    }
+
     public byte[] findAuthorAvatar(UUID id) {
         try {
             System.out.println(fileLocation + id + ".png");

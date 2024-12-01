@@ -1,6 +1,7 @@
 package com.example.demo.controller.rest;
 
 import com.example.demo.author.Author;
+import com.example.demo.author.AuthorCommand;
 import com.example.demo.author.AuthorDto;
 import com.example.demo.author.AuthorService;
 import jakarta.ejb.EJB;
@@ -11,6 +12,7 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 import java.util.UUID;
@@ -39,7 +41,8 @@ public class AuthorController {
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
-    public void putAuthor(Author request) {
-        authorService.create(request);
+    public Response putAuthor(AuthorCommand request) {
+        authorService.createAuthor(request);
+        return Response.ok().build();
     }
 }
