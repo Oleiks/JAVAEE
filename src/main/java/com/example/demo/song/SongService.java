@@ -193,7 +193,7 @@ public class SongService {
             songRepository.deleteSongByUUID(id);
         } else {
             Song song = songRepository.getSongByUUID(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
-            if (song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) {
+            if (!song.getAuthor().getName().equals(author.getName())) {
                 throw new NotAuthorizedException("Song doesn't belong to author");
             }
             songRepository.deleteSongByUUID(id);

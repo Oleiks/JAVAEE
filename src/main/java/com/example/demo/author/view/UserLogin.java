@@ -1,6 +1,5 @@
 package com.example.demo.author.view;
 
-import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.faces.context.FacesContext;
 import jakarta.inject.Inject;

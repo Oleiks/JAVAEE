@@ -4,9 +4,12 @@ import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
 import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
+import jakarta.ejb.EJBException;
+import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +35,11 @@ public class SongView implements Serializable {
         this.songService = songService;
     }
 
-    public void init(){
-        song = songService.findById(id);
+    public void init() throws IOException {
+        try {
+            song = songService.findById(id);
+        }catch(EJBException e){
+            FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_FORBIDDEN, "Song not found");
+        }
     }
 }

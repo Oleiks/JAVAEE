@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+<f:view>
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="description" content="Music application"/>
+    <meta name="keywords" content="Music"/>
+    <meta name="author" content="Aleksander Gorski"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Music application</title>
+
+    <h:outputScript library="push" name="js/message.js" target="head"/>
+    <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
+    <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
+
+</h:head>
+<h:body>
+    <f:websocket channel="broadcastChannel" scope="application" onmessage="receive"/>
+    <f:websocket rendered="#{facesContext.externalContext.userPrincipal != null}" channel="userChannel"
+                 user="#{facesContext.externalContext.userPrincipal.name}" onmessage="receive"/>
+
+
+    <h:form id="chatForm">
+        <h:outputLabel for="message" value="Wiadomość:" />
+        <h:inputText id="message" value="#{chatBean.message}" />
+        <h:outputLabel for="toUser" value="Do użytkownika (opcjonalnie):" />
+        <h:inputText id="toUser" value="#{chatBean.toUser}" />
+
+        <h:commandButton value="Wyślij" actionListener="#{chatBean.sendMessage}">
+            <f:ajax execute="@form" render="@form" />
+        </h:commandButton>
+    </h:form>
+
+    <div id="messageContainer">
+        <ul>
+            <ui:repeat value="#{chatBean.messages}" var="msg">
+                <li><strong>#{msg.from}:</strong> #{msg.content}</li>
+            </ui:repeat>
+        </ul>
+    </div>
+</h:body>
+</f:view>
+</html>
