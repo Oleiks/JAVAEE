@@ -1,8 +1,8 @@
 package com.example.demo.song;
 
 import com.example.demo.author.Author;
-import jakarta.enterprise.context.Dependent;
 import com.example.demo.musicGenre.MusicGenre;
+import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
@@ -58,4 +58,13 @@ public class SongRepositoryImpl implements SongRepository {
                 .setParameter("author", author)
                 .getResultList().stream().map(SongMapper::toSongDto).toList();
     }
+
+    @Override
+    public List<SongDto> findAllByAuthorAndMusicGenre(Author author, MusicGenre musicGenre) {
+        return em.createQuery("select s from Song s where s.author = :author and s.musicGenre = :musicGenre", Song.class)
+                .setParameter("author", author)
+                .setParameter("musicGenre", musicGenre)
+                .getResultList().stream().map(SongMapper::toSongDto).toList();
+    }
+
 }

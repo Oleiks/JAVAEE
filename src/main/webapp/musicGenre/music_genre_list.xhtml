@@ -11,7 +11,7 @@
             <header><h2>Music Genres</h2></header>
 
             <h:dataTable value="#{musicGenreList.genres}" var="musicGenre"
-                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+                         styleClass="table align-middle mb-0 bg-white" headerClass="bg-light" id="musicGenreTable">
                 <h:column>
                     <f:facet name="header">Name</f:facet>
                     <h:outputText value="#{musicGenre.genre}"/>
@@ -27,8 +27,10 @@
                 <h:column>
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
-                        <h:commandButton styleClass="btn" value="Delete"
-                                         action="#{musicGenreList.deleteAction(musicGenre)}"/>
+                        <h:commandButton rendered="#{facesContext.externalContext.isUserInRole('admin')}" styleClass="btn" value="Delete"
+                                         action="#{musicGenreList.deleteAction(musicGenre)}">
+                            <f:ajax execute="@this" render=":musicGenreTable"/>
+                        </h:commandButton>
                     </h:form>
                 </h:column>
             </h:dataTable>

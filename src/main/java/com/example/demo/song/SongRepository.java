@@ -22,4 +22,6 @@ public interface SongRepository {
     List<SongDto> findAllByAuthor(Author author);
 
     List<Song> getSongsByMusicGenre(MusicGenre musicGenre);
+
+    List<SongDto> findAllByAuthorAndMusicGenre(Author author, MusicGenre musicGenre);
 }

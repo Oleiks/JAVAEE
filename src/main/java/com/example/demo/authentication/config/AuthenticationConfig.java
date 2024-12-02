@@ -9,7 +9,13 @@ import jakarta.security.enterprise.identitystore.DatabaseIdentityStoreDefinition
 import jakarta.security.enterprise.identitystore.Pbkdf2PasswordHash;
 
 @ApplicationScoped
-@BasicAuthenticationMechanismDefinition(realmName = "Music application")
+//@BasicAuthenticationMechanismDefinition(realmName = "Music application")
+@CustomFormAuthenticationMechanismDefinition(
+        loginToContinue = @LoginToContinue(
+                loginPage = "/authentication/custom/login.xhtml",
+                errorPage = "/authentication/custom/login_error.xhtml"
+        )
+)
 @DatabaseIdentityStoreDefinition(
         dataSourceLookup = "jdbc/MusicApplication",
         callerQuery = "select password from authors where name = ?",

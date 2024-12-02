@@ -15,7 +15,7 @@ import java.util.List;
 public class MusicGenreList implements Serializable {
 
     private List<MusicGenreDto> genres;
-    private  MusicGenreService musicGenreService;
+    private MusicGenreService musicGenreService;
 
     @EJB
     public void setMusicGenreService(MusicGenreService musicGenreService) {
@@ -29,9 +29,8 @@ public class MusicGenreList implements Serializable {
         return genres;
     }
 
-    public String deleteAction(MusicGenreDto genre) {
+    public void deleteAction(MusicGenreDto genre) {
         musicGenreService.delete(genre.getId());
         genres=null;
-        return "music_genre_list?faces-redirect=true";
     }
 }

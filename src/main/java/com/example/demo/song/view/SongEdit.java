@@ -33,7 +33,6 @@ public class SongEdit implements Serializable {
         this.songService = songService;
     }
 
-    @PostConstruct
     public void init(){
         song = songService.findById(id);
     }

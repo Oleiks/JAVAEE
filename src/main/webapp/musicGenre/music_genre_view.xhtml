@@ -37,8 +37,8 @@
                     <article class="text--justified">
                         <header><h2>Songs</h2></header>
 
-                        <h:dataTable value="#{musicGenreView.musicGenre.songs}" var="song"
-                                     styleClass="table align-middle mb-0 bg-white" headerClass="bg-light">
+                        <h:dataTable value="#{musicGenreView.getSongs(musicGenreView.musicGenre.id)}" var="song"
+                                     styleClass="table align-middle mb-0 bg-white" headerClass="bg-light" id="songTable">
                             <h:column>
                                 <f:facet name="header">Title</f:facet>
                                 <h:outputText value="#{song.title}"/>
@@ -62,7 +62,9 @@
                                 <f:facet name="header">Delete</f:facet>
                                 <h:form>
                                     <h:commandButton styleClass="btn" value="Delete"
-                                                     action="#{musicGenreView.deleteAction(song)}"/>
+                                                     action="#{musicGenreView.deleteAction(song)}">
+                                        <f:ajax execute="@this" render=":songTable"/>
+                                    </h:commandButton>
                                 </h:form>
                             </h:column>
 

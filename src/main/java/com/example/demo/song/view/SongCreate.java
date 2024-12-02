@@ -38,9 +38,9 @@ public class SongCreate implements Serializable {
         this.songService = songService;
     }
 
-    @PostConstruct
-    public void init(){
+    public List<MusicGenreDto> init(){
         musicGenres = musicGenreService.findAll();
+        return musicGenres;
     }
 
     public SongCommand getSong() {

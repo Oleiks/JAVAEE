@@ -4,6 +4,7 @@ import com.example.demo.author.Author;
 import com.example.demo.author.AuthorRepository;
 import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
+import com.example.demo.musicGenre.MusicGenre;
 import com.example.demo.musicGenre.MusicGenreRepository;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
@@ -12,6 +13,7 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.NoArgsConstructor;
+import lombok.extern.java.Log;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.UUID;
 
 @LocalBean
 @Stateless
+@Log
 @NoArgsConstructor(force = true)
 public class SongService {
 
@@ -51,8 +54,15 @@ public class SongService {
         return songRepository.findAllByAuthor(user);
     }
 
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public List<SongDto> findAllByMusicGenreId(UUID uuid) {
-        return songRepository.getSongsByMusicGenre(musicGenreRepository.getMusicGenreByUUID(uuid).orElseThrow(() -> new EntityNotFoundException("MusicGenre doesn't exist."))).stream().map(SongMapper::toSongDto).toList();
+        MusicGenre musicGenre = musicGenreRepository.getMusicGenreByUUID(uuid).orElseThrow(() -> new EntityNotFoundException("MusicGenre doesn't exist."));
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return songRepository.getSongsByMusicGenre(musicGenre).stream().map(SongMapper::toSongDto).toList();
+        }
+        Author user = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName())
+                .orElseThrow(IllegalStateException::new);
+        return songRepository.findAllByAuthorAndMusicGenre(user, musicGenre);
     }
 
     public SongDto findByMusicGenreId(UUID musicGenreUuid, UUID songUuid) {
@@ -60,21 +70,28 @@ public class SongService {
                 .orElseThrow(() -> new EntityNotFoundException("Song with uuid " + songUuid + " in music genre with uuid " + musicGenreUuid + " not found"));
     }
 
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public SongDto findById(UUID id) {
-        return SongMapper.toSongDto(find(id));
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            return SongMapper.toSongDto(find(id));
+        } else {
+            Song song = find(id);
+            return song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())
+                    ? SongMapper.toSongDto(song)
+                    : SongMapper.toSongDto(null);
+        }
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public SongDto findByIdC(UUID musicGenreUuid, UUID songUuid) {
         if (securityContext.isCallerInRole(UserRoles.USER)) {
-            Song song=find(songUuid);
-//            if(song.getMusicGenre().getId().equals(musicGenreUuid)){
-//                throw new EntityNotFoundException("Song not found");
-//            }
-//            if(song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName()))
-//            {
-//                throw new EntityNotFoundException("Song not found");
-//            }
+            Song song = find(songUuid);
+            if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+                throw new EntityNotFoundException("Song not found");
+            }
+            if (song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) {
+                throw new EntityNotFoundException("Song not found");
+            }
             return SongMapper.toSongDto(song);
         }
         return SongMapper.toSongDto(find(songUuid));
@@ -94,7 +111,7 @@ public class SongService {
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void createSongs(Song song) {
-        Author author= authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(()-> new EntityNotFoundException("Author not found"));
+        Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         song.setAuthor(author);
         if (songRepository.getSongByUUID(song.getId()).isPresent()) {
             throw new IllegalArgumentException("Song with uuid " + song.getId() + " already exists");
@@ -102,6 +119,7 @@ public class SongService {
         if (musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId()).isEmpty()) {
             throw new IllegalArgumentException("MusicGenre with uuid " + song.getId() + " doesn't exists");
         }
+        log.info("Creating " + song + " by " + author.getName());
         songRepository.saveSongs(song);
         musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId())
                 .ifPresent(mg -> mg.getSongs().add(song));
@@ -125,9 +143,14 @@ public class SongService {
         songRepository.saveSongs(Song);
     }
 
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void updateSong(UUID uuid, SongDto songDto) {
         Song song = find(uuid);
-        editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
+        Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
+        if ((securityContext.isCallerInRole(UserRoles.USER) && song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) || (securityContext.isCallerInRole(UserRoles.ADMIN))) {
+            log.info("Updating " + song + " by " + author.getName());
+            editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
+        }
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
@@ -139,6 +162,8 @@ public class SongService {
         if (!song.getMusicGenre().getId().equals(musicGenreId)) {
             throw new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId);
         }
+        Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
+        log.info("Updating " + song + " by " + author.getName());
         editSong(song, request.getTitle(), request.getPremiereDate(), request.getLength());
     }
 
@@ -160,15 +185,28 @@ public class SongService {
                 .orElseThrow(() -> new EntityNotFoundException("Song with uuid " + id + " not found"));
     }
 
+    @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void delete(UUID id) {
-        songRepository.deleteSongByUUID(id);
+        Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
+        if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
+            log.info("Deleting song with id " + id + " by " + author.getName());
+            songRepository.deleteSongByUUID(id);
+        } else {
+            Song song = songRepository.getSongByUUID(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
+            if (song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) {
+                throw new NotAuthorizedException("Song doesn't belong to author");
+            }
+            songRepository.deleteSongByUUID(id);
+        }
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void delete(UUID musicGenreUuid, UUID songUuid) throws EntityNotFoundException {
+        Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             Song song = find(songUuid);
             if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+                log.info("Deleting " + song + " by " + author.getName());
                 songRepository.deleteSongByUUID(songUuid);
             } else {
                 throw new EntityNotFoundException("Songs doesn't belong to this music genre");
@@ -179,6 +217,7 @@ public class SongService {
                 throw new NotAuthorizedException("Songs doesn't belong to author");
             }
             if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
+                log.info("Deleting " + song + " by " + author.getName());
                 songRepository.deleteSongByUUID(songUuid);
             } else {
                 throw new EntityNotFoundException("Songs doesn't belong to this music genre");

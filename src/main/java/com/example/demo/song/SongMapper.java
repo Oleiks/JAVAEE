@@ -6,12 +6,14 @@ import java.util.UUID;
 
 public class SongMapper {
     public static SongDto toSongDto(Song song) {
-        return SongDto.builder()
+        return song != null
+                ? SongDto.builder()
                 .title(song.getTitle())
                 .length(song.getLength())
                 .premiereDate(song.getPremiereDate())
                 .id(song.getId())
-                .build();
+                .build()
+                : null;
     }
 
     public static Song toSong(PutSongRequest request, MusicGenre musicGenre) {

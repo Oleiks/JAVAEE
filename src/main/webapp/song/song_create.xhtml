@@ -43,7 +43,7 @@
                             <legend class="form-label fs-6">Music Genre:</legend>
                             <h:selectOneMenu id="musicGenreSelect" value="#{songCreate.song.musicGenre}"
                                              styleClass="form-select">
-                                <f:selectItems value="#{songCreate.musicGenres}" var="musicGenre"
+                                <f:selectItems value="#{songCreate.init()}" var="musicGenre"
                                                itemValue="#{musicGenre.id}" itemLabel="#{musicGenre.genre}" />
                             </h:selectOneMenu>
                         </fieldset>
