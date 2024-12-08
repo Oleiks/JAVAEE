@@ -1,10 +1,10 @@
 package com.example.demo.musicGenre.view;
 
+import com.example.demo.interceptor.LoggerInt;
 import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
@@ -23,14 +23,14 @@ public class MusicGenreList implements Serializable {
     }
 
     public List<MusicGenreDto> getGenres() {
-        if(genres == null) {
-            genres=musicGenreService.findAll();
+        if (genres == null) {
+            genres = musicGenreService.findAll();
         }
         return genres;
     }
 
+    @LoggerInt
     public void deleteAction(MusicGenreDto genre) {
         musicGenreService.delete(genre.getId());
-        genres=null;
     }
 }

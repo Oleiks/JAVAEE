@@ -1,5 +1,6 @@
 package com.example.demo.musicGenre.view;
 
+import com.example.demo.interceptor.LoggerInt;
 import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.song.SongDto;
@@ -52,6 +53,7 @@ public class MusicGenreView implements Serializable {
         return songService.findAllByMusicGenreId(id);
     }
 
+    @LoggerInt
     public void deleteAction(SongDto song) {
         String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
         songService.delete(song.getId());

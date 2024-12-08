@@ -2,15 +2,12 @@ package com.example.demo.song.view;
 
 import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
-import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.ws.rs.NotAuthorizedException;
 import lombok.Getter;
 import lombok.Setter;
 

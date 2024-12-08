@@ -13,7 +13,6 @@ import jakarta.inject.Inject;
 import jakarta.security.enterprise.SecurityContext;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.NoArgsConstructor;
-import lombok.extern.java.Log;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.UUID;
 
 @LocalBean
 @Stateless
-@Log
 @NoArgsConstructor(force = true)
 public class SongService {
 
@@ -119,7 +117,6 @@ public class SongService {
         if (musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId()).isEmpty()) {
             throw new IllegalArgumentException("MusicGenre with uuid " + song.getId() + " doesn't exists");
         }
-        log.info("Creating " + song + " by " + author.getName());
         songRepository.saveSongs(song);
         musicGenreRepository.getMusicGenreByUUID(song.getMusicGenre().getId())
                 .ifPresent(mg -> mg.getSongs().add(song));
@@ -148,7 +145,6 @@ public class SongService {
         Song song = find(uuid);
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         if ((securityContext.isCallerInRole(UserRoles.USER) && song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) || (securityContext.isCallerInRole(UserRoles.ADMIN))) {
-            log.info("Updating " + song + " by " + author.getName());
             editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
         }
     }
@@ -163,7 +159,6 @@ public class SongService {
             throw new EntityNotFoundException("Song with id " + songId + "not found in music genre with id " + musicGenreId);
         }
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
-        log.info("Updating " + song + " by " + author.getName());
         editSong(song, request.getTitle(), request.getPremiereDate(), request.getLength());
     }
 
@@ -189,7 +184,6 @@ public class SongService {
     public void delete(UUID id) {
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
-            log.info("Deleting song with id " + id + " by " + author.getName());
             songRepository.deleteSongByUUID(id);
         } else {
             Song song = songRepository.getSongByUUID(id).orElseThrow(() -> new EntityNotFoundException("Author not found"));
@@ -206,7 +200,6 @@ public class SongService {
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
             Song song = find(songUuid);
             if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
-                log.info("Deleting " + song + " by " + author.getName());
                 songRepository.deleteSongByUUID(songUuid);
             } else {
                 throw new EntityNotFoundException("Songs doesn't belong to this music genre");
@@ -217,7 +210,6 @@ public class SongService {
                 throw new NotAuthorizedException("Songs doesn't belong to author");
             }
             if (song.getMusicGenre().getId().equals(musicGenreUuid)) {
-                log.info("Deleting " + song + " by " + author.getName());
                 songRepository.deleteSongByUUID(songUuid);
             } else {
                 throw new EntityNotFoundException("Songs doesn't belong to this music genre");

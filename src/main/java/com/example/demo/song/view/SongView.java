@@ -2,12 +2,10 @@ package com.example.demo.song.view;
 
 import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
-import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Getter;
@@ -38,7 +36,7 @@ public class SongView implements Serializable {
     public void init() throws IOException {
         try {
             song = songService.findById(id);
-        }catch(EJBException e){
+        } catch (EJBException e) {
             FacesContext.getCurrentInstance().getExternalContext().responseSendError(HttpServletResponse.SC_FORBIDDEN, "Song not found");
         }
     }
