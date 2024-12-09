@@ -54,21 +54,21 @@ public class SongEdit implements Serializable {
     public String saveAction() throws IOException {
         try {
             String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-            message = "";
-            wrong = false;
-            songService.updateSong(id, song);
-            return viewId + "?faces-redirect=true&includeViewParams=true";
-        } catch (EJBException ex) {
             songWrongEdit = SongDto.builder()
                     .title(song.getTitle())
                     .premiereDate(song.getPremiereDate())
                     .length(song.getLength())
                     .build();
+            message = "";
+            wrong = false;
+            songService.updateSong(id, song);
+            return viewId + "?faces-redirect=true&includeViewParams=true";
+        } catch (EJBException ex) {
             song = songService.findById(id);
             message = "Song entity was changed by somebody else";
             wrong = true;
             if (ex.getCause() instanceof IllegalArgumentException) {
-                message = "Song doesn't pass validations";
+                message = ex.getMessage();
             }
             return null;
         }

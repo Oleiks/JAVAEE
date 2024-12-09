@@ -31,7 +31,7 @@ public class SongDto implements Serializable {
     private UUID id;
     @NotEmpty
     private String title;
-    @SongValidator(groups = SongModelGroup.class, length = 1.5)
+    @SongValidator(length = 1.5, message = "Length is less than 1.5")
     private Double length;
     @NotNull
     private LocalDate premiereDate;

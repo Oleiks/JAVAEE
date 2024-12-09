@@ -165,11 +165,8 @@ public class SongService {
     public void updateSong(UUID uuid, SongDto songDto) {
         Set<ConstraintViolation<SongDto>> violations = validator.validate(songDto);
         if (!violations.isEmpty()) {
-            throw new IllegalArgumentException("Song has null values");
-        }
-        violations = validator.validate(songDto, SongModelGroup.class);
-        if (!violations.isEmpty()) {
-            throw new IllegalArgumentException("Song length is less then 1.5");
+            violations.stream().filter(v -> v.getMessage().equals("Length is less than 1.5")).findAny().map(ConstraintViolation::getMessage);
+            throw new IllegalArgumentException(violations.stream().filter(v -> v.getMessage().equals("Length is less than 1.5 or null")).findAny().map(ConstraintViolation::getMessage).orElse("Song has null values"));
         }
         Song song = find(uuid);
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));

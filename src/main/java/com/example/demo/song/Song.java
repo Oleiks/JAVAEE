@@ -2,6 +2,7 @@ package com.example.demo.song;
 
 import com.example.demo.author.Author;
 import com.example.demo.entity.VersionAndCreationDate;
+import com.example.demo.interceptor.SongValidator;
 import com.example.demo.musicGenre.MusicGenre;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -35,7 +36,7 @@ public class Song extends VersionAndCreationDate implements Serializable {
     private UUID id;
     @NotEmpty
     private String title;
-    @NotNull
+    @SongValidator(length = 1.5, message = "Length is less than 1.5")
     private Double length;
     @NotNull
     private LocalDate premiereDate;
