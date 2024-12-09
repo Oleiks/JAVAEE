@@ -43,7 +43,7 @@ public class MusicGenreController {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMusicGenre(@PathParam("id") UUID id) {
-        try{
+        try {
             return Response.ok(musicGenreService.findById(id)).build();
         } catch (EntityNotFoundException e) {
             return Response.status(404).build();
@@ -68,7 +68,7 @@ public class MusicGenreController {
         try {
             musicGenreService.updateMusicGenre(id, request);
             return Response.ok().build();
-        } catch (EntityNotFoundException e){
+        } catch (EntityNotFoundException e) {
             return Response.status(404).build();
         }
     }

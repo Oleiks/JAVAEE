@@ -1,6 +1,5 @@
 package com.example.demo.controller.rest;
 
-import com.example.demo.author.Author;
 import com.example.demo.author.AuthorCommand;
 import com.example.demo.author.AuthorDto;
 import com.example.demo.author.AuthorService;

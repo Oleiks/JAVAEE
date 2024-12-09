@@ -45,8 +45,8 @@ public class SongController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSongs(@PathParam("musicGenreId") UUID musicGenreId) {
         try {
-            System.out.println(songService.findAllByMusicGenreId(musicGenreId).stream().map(SongDto::getVersion).collect(Collectors.toSet()));
-            return Response.ok(songService.findAllByMusicGenreId(musicGenreId)).build();
+            System.out.println(songService.findAllByMusicGenreId(musicGenreId, null).stream().map(SongDto::getVersion).collect(Collectors.toSet()));
+            return Response.ok(songService.findAllByMusicGenreId(musicGenreId, null)).build();
         } catch (EntityNotFoundException e) {
             return Response.status(404).build();
         }

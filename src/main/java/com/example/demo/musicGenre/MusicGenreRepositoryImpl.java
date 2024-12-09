@@ -38,11 +38,11 @@ public class MusicGenreRepositoryImpl implements MusicGenreRepository {
         CriteriaQuery<MusicGenre> query = cb.createQuery(MusicGenre.class);
         Root<MusicGenre> root = query.from(MusicGenre.class);
         List<Predicate> predicates = new ArrayList<>();
-        if(musicGenreDto.getGenre()!=null){
-            predicates.add(cb.equal(root.get("musicGenre"), musicGenreDto.getGenre()));
+        if (musicGenreDto.getGenre() != null) {
+            predicates.add(cb.equal(root.get("genre"), musicGenreDto.getGenre()));
         }
-        if(musicGenreDto.getYearOfOrigin()!=null){
-            predicates.add(cb.equal(root.get("musicGenre"), musicGenreDto.getYearOfOrigin()));
+        if (musicGenreDto.getYearOfOrigin() != null) {
+            predicates.add(cb.equal(root.get("yearOfOrigin"), musicGenreDto.getYearOfOrigin()));
         }
         if (!predicates.isEmpty()) {
             query.where(cb.and(predicates.toArray(new Predicate[0])));

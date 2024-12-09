@@ -5,60 +5,64 @@
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:f="jakarta.faces.core">
-    <f:view>
-        <h:head>
-            <meta charset="UTF-8"/>
-            <meta name="description" content="Music application"/>
-            <meta name="keywords" content="Music"/>
-            <meta name="author" content="Aleksander Gorski"/>
-            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-            <title>Music application</title>
+<f:view>
+    <h:head>
+        <meta charset="UTF-8"/>
+        <meta name="description" content="Music application"/>
+        <meta name="keywords" content="Music"/>
+        <meta name="author" content="Aleksander Gorski"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Music application</title>
 
-            <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
-            <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
+        <h:outputStylesheet library="webjars" name="mdb-ui-kit/6.4.0/css/mdb.min.css"/>
+        <h:outputScript library="webjars" name="mdb-ui-kit/6.4.0/js/mdb.min.js"/>
 
-        </h:head>
+    </h:head>
 
-        <h:body>
-            <div class="container">
-                <header class="mb-4 mt-4">
-                    <h1>Music application</h1>
-                    <h:graphicImage value="/resources/images/ikona.png" alt="Opis obrazka" styleClass="imageH"/>
-                    <h:form styleClass="container d-flex  align-items-center justify-content-end"
-                            rendered="#{facesContext.externalContext.userPrincipal != null}">
-                        #{messages.logged}: <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
-                        <h:commandButton styleClass="btn btn-link" value="#{messages.logout}" action="#{userLogout.logoutAction()}"/>
-                    </h:form>
-                </header>
+    <h:body>
+        <div class="container">
+            <header class="mb-4 mt-4">
+                <h1>Music application</h1>
+                <h:graphicImage value="/resources/images/ikona.png" alt="Opis obrazka" styleClass="imageH"/>
+                <h:form styleClass="container d-flex  align-items-center justify-content-end"
+                        rendered="#{facesContext.externalContext.userPrincipal != null}">
+                    #{messages.logged}:
+                    <h:outputText value="#{facesContext.externalContext.userPrincipal.name}"/>
+                    <h:commandButton styleClass="btn btn-link" value="#{messages.logout}"
+                                     action="#{userLogout.logoutAction()}"/>
+                </h:form>
+            </header>
 
-                <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-                    <div class="container-fluid">
-                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                            <li class="nav-item">
-                                <h:link styleClass="nav-link" outcome="/index.xhtml">#{messages['nav.home']}</h:link>
-                            </li>
-                            <li class="nav-item">
-                                <h:link styleClass="nav-link"
-                                        outcome="/musicGenre/music_genre_list.xhtml">#{messages['nav.musicGenres']}</h:link>
-                            </li>
-                            <li class="nav-item">
-                                <h:link styleClass="nav-link"
-                                        outcome="/song/song_create.xhtml">#{messages['nav.createSong']}</h:link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top">
+                <div class="container-fluid">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link" outcome="/index.xhtml">#{messages['nav.home']}</h:link>
+                        </li>
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link"
+                                    outcome="/musicGenre/music_genre_list.xhtml">#{messages['nav.musicGenres']}
+                            </h:link>
+                        </li>
+                        <li class="nav-item">
+                            <h:link styleClass="nav-link"
+                                    outcome="/song/song_create.xhtml">#{messages['nav.createSong']}
+                            </h:link>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
 
-                <main class="mb-4 mt-4">
-                    <ui:insert name="content"/>
-                </main>
+            <main class="mb-4 mt-4">
+                <ui:insert name="content"/>
+            </main>
 
-                <footer class="text-center text-lg-start bg-light text-muted p-2">
-                    <div class="text-center">
-                        Footer
-                    </div>
-                </footer>
-            </div>
-        </h:body>
-    </f:view>
+            <footer class="text-center text-lg-start bg-light text-muted p-2">
+                <div class="text-center">
+                    Footer
+                </div>
+            </footer>
+        </div>
+    </h:body>
+</f:view>
 </html>

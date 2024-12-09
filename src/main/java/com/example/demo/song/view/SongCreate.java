@@ -1,13 +1,13 @@
 package com.example.demo.song.view;
 
+import com.example.demo.musicGenre.MusicGenre;
 import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import com.example.demo.song.SongCommand;
+import com.example.demo.song.SongMapper;
 import com.example.demo.song.SongService;
-import jakarta.annotation.PostConstruct;
 import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
-import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import lombok.Getter;
 
@@ -38,7 +38,7 @@ public class SongCreate implements Serializable {
         this.songService = songService;
     }
 
-    public List<MusicGenreDto> init(){
+    public List<MusicGenreDto> init() {
         musicGenres = musicGenreService.findAll();
         return musicGenres;
     }
@@ -52,7 +52,12 @@ public class SongCreate implements Serializable {
     }
 
     public String saveAction() {
-        songService.createSong(song);
-        return "music_genre_list?faces-redirect=true";
+        try {
+            MusicGenre musicGenre = musicGenreService.find(song.getMusicGenre());
+            songService.createSongs(SongMapper.toSongSC(song, musicGenre));
+            return "music_genre_list?faces-redirect=true";
+        } catch (IllegalArgumentException e) {
+            return "music_genre_list?faces-redirect=true";
+        }
     }
 }

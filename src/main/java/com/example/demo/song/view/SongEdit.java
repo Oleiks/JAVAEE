@@ -4,14 +4,10 @@ import com.example.demo.song.SongDto;
 import com.example.demo.song.SongService;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBTransactionRolledbackException;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.transaction.TransactionalException;
-import jakarta.ws.rs.BadRequestException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -36,7 +32,10 @@ public class SongEdit implements Serializable {
     private SongDto songWrongEdit;
 
     @Getter
-    private boolean wrong=false;
+    private boolean wrong = false;
+
+    @Getter
+    private String message;
 
     @EJB
     public void setSongService(SongService songService) {
@@ -55,6 +54,8 @@ public class SongEdit implements Serializable {
     public String saveAction() throws IOException {
         try {
             String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+            message = "";
+            wrong = false;
             songService.updateSong(id, song);
             return viewId + "?faces-redirect=true&includeViewParams=true";
         } catch (EJBException ex) {
@@ -64,7 +65,11 @@ public class SongEdit implements Serializable {
                     .length(song.getLength())
                     .build();
             song = songService.findById(id);
-            wrong=true;
+            message = "Song entity was changed by somebody else";
+            wrong = true;
+            if (ex.getCause() instanceof IllegalArgumentException) {
+                message = "Song doesn't pass validations";
+            }
             return null;
         }
     }

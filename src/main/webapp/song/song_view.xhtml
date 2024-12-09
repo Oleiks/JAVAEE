@@ -12,7 +12,11 @@
 
     <ui:define name="content">
         <article>
-            <header><h2><h:outputText value="#{songView.song.title}"/></h2></header>
+            <header>
+                <h2>
+                    <h:outputText value="#{songView.song.title}"/>
+                </h2>
+            </header>
             <div class="container">
                 <div class="row">
                     <div class="col-4">
@@ -33,7 +37,7 @@
                                 <h:outputText value="#{songView.song.premiereDate}"/>
                             </div>
                         </div>
-                </div>
+                    </div>
                 </div>
             </div>
         </article>

@@ -28,4 +28,14 @@ public class SongMapper {
                 .musicGenre(musicGenre)
                 .build();
     }
+
+    public static Song toSongSC(SongCommand request, MusicGenre musicGenre) {
+        return Song.builder()
+                .title(request.getTitle())
+                .length(request.getLength())
+                .premiereDate(request.getPremiereDate())
+                .id(UUID.randomUUID())
+                .musicGenre(musicGenre)
+                .build();
+    }
 }

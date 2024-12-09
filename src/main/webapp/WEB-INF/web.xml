@@ -47,11 +47,6 @@
         <role-name>user</role-name>
     </security-role>
 
-    <context-param>
-        <param-name>jakarta.faces.ENABLE_WEBSOCKET_ENDPOINT</param-name>
-        <param-value>true</param-value>
-    </context-param>
-
     <error-page>
         <error-code>401</error-code>
         <location>/error/401.xhtml</location>

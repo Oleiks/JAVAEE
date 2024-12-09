@@ -4,21 +4,24 @@ import com.example.demo.author.Author;
 import com.example.demo.author.AuthorRepository;
 import com.example.demo.author.UserRoles;
 import com.example.demo.exception.EntityNotFoundException;
+import com.example.demo.interceptor.SongModelGroup;
 import com.example.demo.musicGenre.MusicGenre;
 import com.example.demo.musicGenre.MusicGenreRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.OptimisticLockException;
 import jakarta.security.enterprise.SecurityContext;
-import jakarta.transaction.TransactionalException;
-import jakarta.ws.rs.BadRequestException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @LocalBean
@@ -34,6 +37,8 @@ public class SongService {
 
     private final SecurityContext securityContext;
 
+    private Validator validator;
+
     @Inject
     public SongService(SongRepository songRepository,
                        MusicGenreRepository musicGenreRepository,
@@ -43,6 +48,11 @@ public class SongService {
         this.musicGenreRepository = musicGenreRepository;
         this.authorRepository = authorRepository;
         this.securityContext = securityContext;
+    }
+
+    @PostConstruct
+    public void initValidator() {
+        this.validator = Validation.buildDefaultValidatorFactory().getValidator();
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
@@ -56,14 +66,14 @@ public class SongService {
     }
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
-    public List<SongDto> findAllByMusicGenreId(UUID uuid) {
+    public List<SongDto> findAllByMusicGenreId(UUID uuid, SongDto songDto) {
         MusicGenre musicGenre = musicGenreRepository.getMusicGenreByUUID(uuid).orElseThrow(() -> new EntityNotFoundException("MusicGenre doesn't exist."));
         if (securityContext.isCallerInRole(UserRoles.ADMIN)) {
-            return songRepository.getSongsByMusicGenre(musicGenre).stream().map(SongMapper::toSongDto).toList();
+            return songRepository.getSongsByMusicGenreAndFilter(musicGenre, songDto).stream().map(SongMapper::toSongDto).toList();
         }
         Author user = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName())
                 .orElseThrow(IllegalStateException::new);
-        return songRepository.findAllByAuthorAndMusicGenre(user, musicGenre);
+        return songRepository.findAllByAuthorAndMusicGenreAndFilter(user, musicGenre, songDto);
     }
 
     public SongDto findByMusicGenreId(UUID musicGenreUuid, UUID songUuid) {
@@ -112,6 +122,14 @@ public class SongService {
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void createSongs(Song song) {
+        Set<ConstraintViolation<Song>> violations = validator.validate(song);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("Song has null values");
+        }
+        violations = validator.validate(song, SongModelGroup.class);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("Song length is less then 1.5");
+        }
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         song.setAuthor(author);
         if (songRepository.getSongByUUID(song.getId()).isPresent()) {
@@ -145,6 +163,14 @@ public class SongService {
 
     @RolesAllowed({UserRoles.ADMIN, UserRoles.USER})
     public void updateSong(UUID uuid, SongDto songDto) {
+        Set<ConstraintViolation<SongDto>> violations = validator.validate(songDto);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("Song has null values");
+        }
+        violations = validator.validate(songDto, SongModelGroup.class);
+        if (!violations.isEmpty()) {
+            throw new IllegalArgumentException("Song length is less then 1.5");
+        }
         Song song = find(uuid);
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         if ((securityContext.isCallerInRole(UserRoles.USER) && song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) || (securityContext.isCallerInRole(UserRoles.ADMIN))) {

@@ -31,6 +31,10 @@ public class MusicGenreView implements Serializable {
     @Getter
     private List<SongDto> songs;
 
+    @Getter
+    @Setter
+    private SongDto filter;
+
     private MusicGenreService musicGenreService;
     private SongService songService;
 
@@ -47,10 +51,15 @@ public class MusicGenreView implements Serializable {
     public void init() throws IOException {
         musicGenre = musicGenreService.findById(id);
         songs = songService.findAll();
+        filter = new SongDto();
     }
 
-    public List<SongDto> getSongs(UUID id){
-        return songService.findAllByMusicGenreId(id);
+    public void getSongsFilter(UUID id) {
+        songs = songService.findAllByMusicGenreId(id, filter);
+    }
+
+    public List<SongDto> getSongs(UUID id) {
+        return songService.findAllByMusicGenreId(id, filter);
     }
 
     @LoggerInt

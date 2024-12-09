@@ -4,7 +4,7 @@ import com.example.demo.interceptor.LoggerInt;
 import com.example.demo.musicGenre.MusicGenreDto;
 import com.example.demo.musicGenre.MusicGenreService;
 import jakarta.ejb.EJB;
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,14 +12,14 @@ import lombok.Setter;
 import java.io.Serializable;
 import java.util.List;
 
-@RequestScoped
+@ViewScoped
 @Named
 public class MusicGenreList implements Serializable {
 
     private List<MusicGenreDto> genres;
     @Getter
     @Setter
-    private MusicGenreDto filter;
+    private MusicGenreDto filter = new MusicGenreDto();
     private MusicGenreService musicGenreService;
 
     @EJB
@@ -35,12 +35,10 @@ public class MusicGenreList implements Serializable {
     }
 
     public void getGenresByFilter() {
-        if (filter == null) {
+        if ((filter.getGenre() == null || filter.getGenre().isEmpty()) && (filter.getYearOfOrigin() == null)) {
             genres = musicGenreService.findAll();
-        }
-        else{
-            System.out.println("xd");
-            genres=musicGenreService.findAllByFilter(filter);
+        } else {
+            genres = musicGenreService.findAllByFilter(filter);
         }
     }
 

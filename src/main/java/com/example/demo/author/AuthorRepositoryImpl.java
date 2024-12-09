@@ -1,8 +1,6 @@
 package com.example.demo.author;
 
-import com.example.demo.song.Song;
 import jakarta.enterprise.context.Dependent;
-import jakarta.enterprise.context.RequestScoped;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;

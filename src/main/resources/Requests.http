@@ -19,9 +19,9 @@ POST http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/
 Content-Type: application/json
 
 {
-    "name": "Wilki",
-    "debutYear": 1991,
-    "type": "BAND"
+  "name": "Wilki",
+  "debutYear": 1991,
+  "type": "BAND"
 }
 
 <> 2024-10-17T185320.200.json

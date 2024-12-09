@@ -9,15 +9,16 @@
 
         <article class="text--justified">
             <header><h2>Music Genres</h2></header>
-            <h:inputText id="genreInput" value="#{musicGenreList.filter.genre}" styleClass="form-control">
-            </h:inputText>
-            <h:outputLabel for="genreInput" value="Enter genre Input:" />
-            <h:inputText id="yearOfOriginInput" value="#{musicGenreList.filter.yearOfOrigin}" styleClass="form-control">
-            </h:inputText>
-            <h:outputLabel for="yearOfOriginInput" value="Enter year of origin:" />
-            <h:commandButton styleClass="btn" value="Submit"
-                             action="#{musicGenreList.getGenresByFilter()}">
-            </h:commandButton>
+            <h:form id="musicGenreForm">
+                <h:outputLabel for="genreInput" value="Enter genre Input:"/>
+                <h:inputText id="genreInput" value="#{musicGenreList.filter.genre}" styleClass="form-control"/>
+                <h:outputLabel for="yearOfOriginInput" value="Enter year of origin:"/>
+                <h:inputText id="yearOfOriginInput" value="#{musicGenreList.filter.yearOfOrigin}"
+                             styleClass="form-control"/>
+                <h:commandButton styleClass="btn" value="Submit" action="#{musicGenreList.getGenresByFilter()}">
+                    <f:ajax execute="@form" render="musicGenreTable"/>
+                </h:commandButton>
+            </h:form>
             <h:dataTable value="#{musicGenreList.genres}" var="musicGenre"
                          styleClass="table align-middle mb-0 bg-white" headerClass="bg-light" id="musicGenreTable">
 
@@ -36,7 +37,8 @@
                 <h:column>
                     <f:facet name="header">Delete</f:facet>
                     <h:form>
-                        <h:commandButton rendered="#{facesContext.externalContext.isUserInRole('admin')}" styleClass="btn" value="Delete"
+                        <h:commandButton rendered="#{facesContext.externalContext.isUserInRole('admin')}"
+                                         styleClass="btn" value="Delete"
                                          action="#{musicGenreList.deleteAction(musicGenre)}">
                             <f:ajax execute="@this" render=":musicGenreTable"/>
                         </h:commandButton>

@@ -12,7 +12,25 @@
 
     <ui:define name="content">
         <article>
-            <header><h2><h:outputText value="#{musicGenreView.musicGenre.genre}"/></h2></header>
+            <header>
+                <h2>
+                    <h:outputText value="#{musicGenreView.musicGenre.genre}"/>
+                </h2>
+            </header>
+            <h:form id="songForm">
+                <h:outputLabel for="titleInput" value="Enter title:"/>
+                <h:inputText id="titleInput" value="#{musicGenreView.filter.title}"
+                             styleClass="form-control"/>
+                <h:outputLabel for="lengthInput" value="Enter length input:"/>
+                <h:inputText id="lengthInput" value="#{musicGenreView.filter.length}" styleClass="form-control"/>
+                <h:outputLabel for="premiereDateInput" value="Enter premiereDate:"/>
+                <h:inputText id="premiereDateInput" value="#{musicGenreView.filter.premiereDate}"
+                             styleClass="form-control"/>
+                <h:commandButton styleClass="btn" value="Submit"
+                                 action="#{musicGenreView.getSongsFilter(musicGenreView.musicGenre.id)}">
+                    <f:ajax execute="@form" render="songTable"/>
+                </h:commandButton>
+            </h:form>
             <div class="container">
                 <div class="row">
                     <div class="col-4">
@@ -33,12 +51,13 @@
                                 <h:outputText value="#{musicGenreView.musicGenre.yearOfOrigin}"/>
                             </div>
                         </div>
-                </div>
+                    </div>
                     <article class="text--justified">
                         <header><h2>Songs</h2></header>
 
                         <h:dataTable value="#{musicGenreView.getSongs(musicGenreView.musicGenre.id)}" var="song"
-                                     styleClass="table align-middle mb-0 bg-white" headerClass="bg-light" id="songTable">
+                                     styleClass="table align-middle mb-0 bg-white" headerClass="bg-light"
+                                     id="songTable">
                             <h:column>
                                 <f:facet name="header">Title</f:facet>
                                 <h:outputText value="#{song.title}"/>

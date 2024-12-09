@@ -26,7 +26,8 @@
                 <div class="row">
                     <div class="col-4 p-2">
                         <div class="form-floating">
-                            <h:inputText id="length" value="#{songEdit.song.length}" styleClass="form-control"/>
+                            <h:inputText id="length" value="#{songEdit.song.length}" styleClass="form-control">
+                            </h:inputText>
                             <h:outputLabel for="length" value="Length:" styleClass="form-label"/>
                         </div>
                     </div>
@@ -37,7 +38,7 @@
                         <div class="form-floating">
                             <h:inputText id="dateInput" value="#{songEdit.song.premiereDate}" styleClass="form-control">
                             </h:inputText>
-                            <h:outputLabel for="dateInput" value="Enter Date:" />
+                            <h:outputLabel for="dateInput" value="Enter Date:"/>
                         </div>
                     </div>
                 </div>
@@ -51,11 +52,13 @@
                         <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
                     </div>
                 </div>
-                <h:outputLabel value="#{songEdit.songWrongEdit.title}" rendered="#{songEdit.wrong==true}" />
+                <h:outputLabel value="#{songEdit.message}" rendered="#{songEdit.wrong==true}"/>
                 <br></br>
-                <h:outputLabel value="#{songEdit.songWrongEdit.premiereDate}" rendered="#{songEdit.wrong==true}" />
+                <h:outputLabel value="#{songEdit.songWrongEdit.title}" rendered="#{songEdit.wrong==true}"/>
                 <br></br>
-                <h:outputLabel value="#{songEdit.songWrongEdit.length}" rendered="#{songEdit.wrong==true}" />
+                <h:outputLabel value="#{songEdit.songWrongEdit.premiereDate}" rendered="#{songEdit.wrong==true}"/>
+                <br></br>
+                <h:outputLabel value="#{songEdit.songWrongEdit.length}" rendered="#{songEdit.wrong==true}"/>
             </h:form>
         </article>
     </ui:define>

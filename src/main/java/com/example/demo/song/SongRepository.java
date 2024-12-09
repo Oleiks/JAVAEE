@@ -1,7 +1,6 @@
 package com.example.demo.song;
 
 import com.example.demo.author.Author;
-
 import com.example.demo.musicGenre.MusicGenre;
 
 import java.util.List;
@@ -24,4 +23,8 @@ public interface SongRepository {
     List<Song> getSongsByMusicGenre(MusicGenre musicGenre);
 
     List<SongDto> findAllByAuthorAndMusicGenre(Author author, MusicGenre musicGenre);
+
+    List<Song> getSongsByMusicGenreAndFilter(MusicGenre musicGenre, SongDto filter);
+
+    List<SongDto> findAllByAuthorAndMusicGenreAndFilter(Author author, MusicGenre musicGenre, SongDto filter);
 }
