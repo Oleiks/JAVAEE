@@ -12,6 +12,9 @@ public class SongMapper {
                 .length(song.getLength())
                 .premiereDate(song.getPremiereDate())
                 .id(song.getId())
+                .version(song.getVersion())
+                .creationDateTime(song.getCreationDateTime())
+                .updateDateTime(song.getUpdateDateTime())
                 .build()
                 : null;
     }

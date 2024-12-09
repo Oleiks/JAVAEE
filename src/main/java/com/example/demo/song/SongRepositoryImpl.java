@@ -5,6 +5,9 @@ import com.example.demo.musicGenre.MusicGenre;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,14 +25,21 @@ public class SongRepositoryImpl implements SongRepository {
 
     @Override
     public List<Song> getSongs() {
-        return em.createQuery("select s from Song s", Song.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Song> query = cb.createQuery(Song.class);
+        Root<Song> root = query.from(Song.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
     public List<Song> getSongsByMusicGenre(MusicGenre musicGenre) {
-        return em.createQuery("select s from Song s where s.musicGenre=:musicGenre", Song.class)
-                .setParameter("musicGenre", musicGenre)
-                .getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Song> query = cb.createQuery(Song.class);
+        Root<Song> root = query.from(Song.class);
+        query.where(cb.equal(root.get("musicGenre"), musicGenre));
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override
@@ -54,17 +64,22 @@ public class SongRepositoryImpl implements SongRepository {
 
     @Override
     public List<SongDto> findAllByAuthor(Author author) {
-        return em.createQuery("select s from Song s where s.author = :author", Song.class)
-                .setParameter("author", author)
-                .getResultList().stream().map(SongMapper::toSongDto).toList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Song> query = cb.createQuery(Song.class);
+        Root<Song> root = query.from(Song.class);
+        query.where(cb.equal(root.get("author"), author));
+        query.select(root);
+        return em.createQuery(query).getResultList().stream().map(SongMapper::toSongDto).toList();
     }
 
     @Override
     public List<SongDto> findAllByAuthorAndMusicGenre(Author author, MusicGenre musicGenre) {
-        return em.createQuery("select s from Song s where s.author = :author and s.musicGenre = :musicGenre", Song.class)
-                .setParameter("author", author)
-                .setParameter("musicGenre", musicGenre)
-                .getResultList().stream().map(SongMapper::toSongDto).toList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Song> query = cb.createQuery(Song.class);
+        Root<Song> root = query.from(Song.class);
+        query.where(cb.and(cb.equal(root.get("author"), author)), cb.equal(root.get("musicGenre"), musicGenre));
+        query.select(root);
+        return em.createQuery(query).getResultList().stream().map(SongMapper::toSongDto).toList();
     }
 
 }

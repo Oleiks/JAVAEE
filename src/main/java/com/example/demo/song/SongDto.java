@@ -11,6 +11,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
@@ -28,4 +29,7 @@ public class SongDto {
     private LocalDate premiereDate;
     private AuthorDto author;
     private MusicGenreDto musicGenre;
+    private Long version;
+    private LocalDateTime creationDateTime;
+    private LocalDateTime updateDateTime;
 }

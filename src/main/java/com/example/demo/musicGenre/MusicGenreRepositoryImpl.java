@@ -3,7 +3,12 @@ package com.example.demo.musicGenre;
 import jakarta.enterprise.context.Dependent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,7 +25,30 @@ public class MusicGenreRepositoryImpl implements MusicGenreRepository {
 
     @Override
     public List<MusicGenre> getMusicGenres() {
-        return em.createQuery("select mg from MusicGenre mg", MusicGenre.class).getResultList();
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<MusicGenre> query = cb.createQuery(MusicGenre.class);
+        Root<MusicGenre> root = query.from(MusicGenre.class);
+        query.select(root);
+        return em.createQuery(query).getResultList();
+    }
+
+    @Override
+    public List<MusicGenre> getMusicGenresByFilter(MusicGenreDto musicGenreDto) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<MusicGenre> query = cb.createQuery(MusicGenre.class);
+        Root<MusicGenre> root = query.from(MusicGenre.class);
+        List<Predicate> predicates = new ArrayList<>();
+        if(musicGenreDto.getGenre()!=null){
+            predicates.add(cb.equal(root.get("musicGenre"), musicGenreDto.getGenre()));
+        }
+        if(musicGenreDto.getYearOfOrigin()!=null){
+            predicates.add(cb.equal(root.get("musicGenre"), musicGenreDto.getYearOfOrigin()));
+        }
+        if (!predicates.isEmpty()) {
+            query.where(cb.and(predicates.toArray(new Predicate[0])));
+        }
+        query.select(root);
+        return em.createQuery(query).getResultList();
     }
 
     @Override

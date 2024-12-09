@@ -15,4 +15,6 @@ public interface MusicGenreRepository {
     void deleteMusicGenreById(UUID id);
 
     void updateMusicGenre(MusicGenre musicGenre);
+
+    List<MusicGenre> getMusicGenresByFilter(MusicGenreDto musicGenreDto);
 }

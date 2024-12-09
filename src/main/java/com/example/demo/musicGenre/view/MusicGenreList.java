@@ -6,6 +6,8 @@ import com.example.demo.musicGenre.MusicGenreService;
 import jakarta.ejb.EJB;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Named;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.List;
 public class MusicGenreList implements Serializable {
 
     private List<MusicGenreDto> genres;
+    @Getter
+    @Setter
+    private MusicGenreDto filter;
     private MusicGenreService musicGenreService;
 
     @EJB
@@ -27,6 +32,16 @@ public class MusicGenreList implements Serializable {
             genres = musicGenreService.findAll();
         }
         return genres;
+    }
+
+    public void getGenresByFilter() {
+        if (filter == null) {
+            genres = musicGenreService.findAll();
+        }
+        else{
+            System.out.println("xd");
+            genres=musicGenreService.findAllByFilter(filter);
+        }
     }
 
     @LoggerInt

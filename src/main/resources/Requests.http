@@ -59,7 +59,7 @@ DELETE http://localhost:9080/demo-1.0-SNAPSHOT/api/authors/bc72126e-9a5e-4304-a2
 
 ###
 // @no-cookie-jar
-GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/
+GET http://localhost:9080/demo-1.0-SNAPSHOT/api/musicGenres/7154908a-0aba-4967-814b-86740407acfb/songs/
 Authorization: Basic S2FueWUgV2VzdDphZG1pbmFkbWlu
 
 ###

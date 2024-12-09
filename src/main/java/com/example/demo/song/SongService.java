@@ -10,7 +10,10 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.ejb.LocalBean;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import jakarta.persistence.OptimisticLockException;
 import jakarta.security.enterprise.SecurityContext;
+import jakarta.transaction.TransactionalException;
+import jakarta.ws.rs.BadRequestException;
 import jakarta.ws.rs.NotAuthorizedException;
 import lombok.NoArgsConstructor;
 
@@ -145,7 +148,7 @@ public class SongService {
         Song song = find(uuid);
         Author author = authorRepository.getAuthorByName(securityContext.getCallerPrincipal().getName()).orElseThrow(() -> new EntityNotFoundException("Author not found"));
         if ((securityContext.isCallerInRole(UserRoles.USER) && song.getAuthor().getName().equals(securityContext.getCallerPrincipal().getName())) || (securityContext.isCallerInRole(UserRoles.ADMIN))) {
-            editSong(song, songDto.getTitle(), songDto.getPremiereDate(), songDto.getLength());
+            editSong(song, songDto);
         }
     }
 
@@ -171,6 +174,18 @@ public class SongService {
         }
         if (premiereDate != null) {
             song.setPremiereDate(premiereDate);
+        }
+        songRepository.updateSong(song);
+    }
+
+    private void editSong(Song song, SongDto songDto) {
+        if (songDto.getTitle() != null) {
+            song.setTitle(songDto.getTitle());
+        }
+        song.setLength(songDto.getLength());
+        song.setVersion(songDto.getVersion());
+        if (songDto.getPremiereDate() != null) {
+            song.setPremiereDate(songDto.getPremiereDate());
         }
         songRepository.updateSong(song);
     }

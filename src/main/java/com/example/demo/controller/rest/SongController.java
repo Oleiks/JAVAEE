@@ -23,6 +23,7 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Path("/musicGenres")
 public class SongController {
@@ -44,6 +45,7 @@ public class SongController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getSongs(@PathParam("musicGenreId") UUID musicGenreId) {
         try {
+            System.out.println(songService.findAllByMusicGenreId(musicGenreId).stream().map(SongDto::getVersion).collect(Collectors.toSet()));
             return Response.ok(songService.findAllByMusicGenreId(musicGenreId)).build();
         } catch (EntityNotFoundException e) {
             return Response.status(404).build();

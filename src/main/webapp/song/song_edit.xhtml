@@ -51,6 +51,11 @@
                         <h:commandButton styleClass="btn btn-secondary" type="reset" value="Reset"/>
                     </div>
                 </div>
+                <h:outputLabel value="#{songEdit.songWrongEdit.title}" rendered="#{songEdit.wrong==true}" />
+                <br></br>
+                <h:outputLabel value="#{songEdit.songWrongEdit.premiereDate}" rendered="#{songEdit.wrong==true}" />
+                <br></br>
+                <h:outputLabel value="#{songEdit.songWrongEdit.length}" rendered="#{songEdit.wrong==true}" />
             </h:form>
         </article>
     </ui:define>

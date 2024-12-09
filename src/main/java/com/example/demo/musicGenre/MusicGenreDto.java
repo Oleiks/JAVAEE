@@ -13,5 +13,5 @@ import java.util.UUID;
 public class MusicGenreDto {
     private UUID id;
     private String genre;
-    private int yearOfOrigin;
+    private Integer yearOfOrigin;
 }

@@ -28,6 +28,11 @@ public class MusicGenreService {
         return musicGenreRepository.getMusicGenres().stream().map(MusicGenreMapper::toMusicGenreDto).toList();
     }
 
+    @RolesAllowed(UserRoles.USER)
+    public List<MusicGenreDto> findAllByFilter(MusicGenreDto musicGenreDto) {
+        return musicGenreRepository.getMusicGenresByFilter(musicGenreDto).stream().map(MusicGenreMapper::toMusicGenreDto).toList();
+    }
+
     public MusicGenreDto findById(UUID id) {
         return MusicGenreMapper.toMusicGenreDto(find(id));
     }
